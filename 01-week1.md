@@ -160,7 +160,7 @@ Ez magában foglalja a számítógépes elemzést: adatbányászatot, statisztik
 
 Az eredmények megjelenítése történhet online platformokon vagy offline formában (publikációk). 
 
-### 1.2.2 Az adat-életciklus öt fázisa
+### Az adat-életciklus öt fázisa
 
 Drucker [-@drucker2021digital, 2-5] öt alapvető tevékenységet azonosít, amelyek átívelnek a teljes digitális kutatási folyamaton:
 
@@ -215,7 +215,7 @@ Ezt a kezdeti tervezéstől figyelembe kell venni. A kezdeti tervezési döntés
 - Milyen fenntartási költségekkel jár a projekt?
 - Kinek az érdeke a projekt megőrzése?
 
-### 1.2.3 Technológia és értékek
+### Technológia és értékek
 
 Minden digitális módszer tükrözi a tervezői döntéseket, kulturális előfeltevéseket és hatalmi viszonyokat. [-@drucker2021digital, xi-xii]
 
@@ -303,7 +303,7 @@ A kvantitatív történettudomány elsősorban a forrásokban rejlő strukturál
 - Meteorológiai mérések
 - Földmérési adatok
 
-### 1.3.2 Adatbázisba rendezhető adat
+### Adatbázisba rendezhető adat
 
 **Definíció:** Olyan információ, amelyet **mi strukturálunk** a forrásokból adatbázissá a kutatási kérdéseinknek megfelelően.
 
@@ -385,7 +385,7 @@ Minden mezőválasztás egyidejűleg **megmutat** és **elrejt** valamit. Az ada
 
 ---
 
-### 1.3.3 Szöveg mint adat 
+###  Szöveg mint adat 
 
 ** Nagy mennyiségű szöveg számítógépes elemzése - amit Franco Moretti *distant reading*-nek nevezett, szembeállítva a hagyományos "közeli olvasással" (*close reading*).
 
