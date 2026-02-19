@@ -61,7 +61,7 @@ Egyetemi Adjunktus, ELTE BTK, Történelem Segédtudományai Tanszék
 
 ---
 
-**Utolsó build:** 2026-02-19 22:51:04.067011
+**Utolsó build:** 2026-02-19 22:55:00.214458
 
 **Build környezet:**  
 aarch64-apple-darwin20
