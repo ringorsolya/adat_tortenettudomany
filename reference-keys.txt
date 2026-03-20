@@ -41,9 +41,9 @@ week5
 week5-intro
 week5-topics
 week5-readings
-week_prozo
+week6
 prozo-mit
-prozo-forrás
+prozo-forras
 a-korpusz-felépítése
 a-prozopográfiai-adatmodell-tervezése
 kulcsváltozók-és-operacionalizálásuk
@@ -52,12 +52,12 @@ prozo-egyh
 a-finanszírozás-megosztása-egyházmegye-vs.-szülő
 prozo-ertekel
 a-kódolási-séma
-prozo-idő
+prozo-ido
 week7
 week7-intro
 week7-topics
 week7-readings
-week_nsz
+week8
 nsz-kerdes
 nsz-korpusz
 nsz-modszer
