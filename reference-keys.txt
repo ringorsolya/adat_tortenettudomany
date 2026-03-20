@@ -53,9 +53,6 @@ a-finanszírozás-megosztása-egyházmegye-vs.-szülő
 prozo-ertekel
 a-kódolási-séma
 prozo-idő
-prozo-reflexio
-a-prozopográfia-korlátai
-prozo-readings
 week7
 week7-intro
 week7-topics
@@ -73,8 +70,6 @@ aktorprofilok
 a-pozsgay-fordulat-kvalitatív-validálás
 nsz-reflexio
 a-hipotézis-értékelése
-erősségek-és-korlátok
-nsz-readings
 week9
 week9-intro
 week9-topics
