@@ -41,10 +41,6 @@ week5
 week5-intro
 week5-topics
 week5-readings
-week6
-week6-intro
-week6-topics
-week6-readings
 week_prozo
 prozo-mit
 prozo-forrás
@@ -59,14 +55,11 @@ a-kódolási-séma
 prozo-idő
 prozo-reflexio
 a-prozopográfia-korlátai
+prozo-readings
 week7
 week7-intro
 week7-topics
 week7-readings
-week8
-week8-intro
-week8-topics
-week8-readings
 week_nsz
 nsz-kerdes
 nsz-korpusz
