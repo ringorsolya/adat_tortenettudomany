@@ -1,0 +1,1102 @@
+<html lang="hu"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEI Annotáló + Kapcsolatháló – ELTE BTK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400&amp;family=Outfit:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0ebe0;--bg2:#e8e0d0;--panel:#faf7f2;
+  --sidebar:#1e1a14;--sidebar2:#2a2318;
+  --ink:#1a1510;--ink2:#4a3f30;--ink3:#8a7a65;
+  --border:#d0c4b0;--border2:#c0b09a;
+  --person:#a02020;--person-bg:rgba(160,32,32,.12);
+  --org:#1a4a7a;--org-bg:rgba(26,74,122,.12);
+  --work:#8a6010;--work-bg:rgba(138,96,16,.12);
+  --date:#1a6a3a;--date-bg:rgba(26,106,58,.12);
+  --place:#5a1a7a;--place-bg:rgba(90,26,122,.12);
+  --other:#4a4a4a;--other-bg:rgba(74,74,74,.12);
+  --accent:#a02020;--radius:4px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
+header{background:var(--sidebar);color:#f0e8d8;padding:0 20px;display:flex;align-items:center;gap:16px;height:50px;flex-shrink:0;border-bottom:2px solid var(--accent)}
+.app-logo{font-family:'Lora',serif;font-size:15px;font-weight:600;white-space:nowrap}
+.app-logo span{color:#d06060}
+.nav-tabs{display:flex;gap:2px}
+.ntab{font-size:12px;padding:5px 14px;border:none;background:transparent;color:#8a7a6a;cursor:pointer;border-radius:var(--radius);font-family:'Outfit',sans-serif;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:5px}
+.ntab:hover{background:#2a2318;color:#c0b09a}
+.ntab.active{background:var(--accent);color:#fff}
+.ntab .badge{background:rgba(255,255,255,.2);border-radius:10px;padding:1px 6px;font-size:10px;font-family:'DM Mono',monospace}
+.header-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn-sm{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;padding:4px 11px;border:1px solid #4a3a28;background:transparent;color:#c0b09a;cursor:pointer;border-radius:var(--radius);transition:all .15s;text-transform:uppercase}
+.btn-sm:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.view{display:none;flex:1;overflow:hidden}
+.view.active{display:flex}
+/* DOCS */
+#view-docs{flex-direction:column;background:var(--bg)}
+.docs-toolbar{padding:14px 24px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.docs-toolbar h2{font-size:14px;font-weight:600;color:var(--ink2);margin-right:auto}
+.btn-primary{font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{font-size:12px;padding:6px 12px;background:transparent;color:var(--ink2);border:1px solid var(--border2);border-radius:var(--radius);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-secondary:hover{background:var(--bg2)}
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:24px;overflow-y:auto;align-content:start}
+.doc-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:18px;transition:all .18s;position:relative;overflow:hidden}
+.doc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);transform:scaleX(0);transition:transform .2s}
+.doc-card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.doc-card:hover::before,.doc-card.demo-card::before{transform:scaleX(1)}
+.doc-card.demo-card::before{opacity:.4}
+.doc-card-title{font-family:'Lora',serif;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:5px;line-height:1.3}
+.doc-card-meta{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink3);margin-bottom:10px;line-height:1.8}
+.doc-card-stats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.stat-pill{font-size:10px;padding:2px 8px;border-radius:20px;font-family:'DM Mono',monospace;border:1px solid}
+.doc-card-actions{display:flex;gap:6px;flex-wrap:wrap}
+.add-card{background:var(--bg2);border:2px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:140px;color:var(--ink3);transition:all .18s;cursor:pointer;border-radius:6px}
+.add-card:hover{border-color:var(--accent);color:var(--accent)}
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;align-items:center;justify-content:center}
+.modal-overlay.visible{display:flex}
+.modal{background:#fff;border-radius:6px;width:min(560px,94vw);max-height:86vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);border-top:3px solid var(--accent)}
+.modal-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:15px;font-weight:600;color:var(--ink)}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:18px;line-height:1}
+.modal-close:hover{color:var(--accent)}
+.modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-field label{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3)}
+.form-field input,.form-field textarea{font-family:'Outfit',sans-serif;font-size:13px;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius);background:#fff;color:var(--ink);outline:none;transition:border-color .12s}
+.form-field input:focus,.form-field textarea:focus{border-color:var(--accent)}
+.form-field textarea{resize:vertical;min-height:130px;font-family:'Lora',serif;line-height:1.65}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+/* ANNOTATE */
+#view-annotate{flex-direction:row}
+.ann-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.ann-doc-bar{padding:8px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.ann-doc-bar label{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3)}
+.doc-select{font-family:'Outfit',sans-serif;font-size:13px;padding:5px 10px;border:1px solid var(--border2);border-radius:var(--radius);background:#fff;color:var(--ink);outline:none;cursor:pointer;min-width:220px}
+.doc-select:focus{border-color:var(--accent)}
+.btn-edit-meta{font-size:11px;padding:4px 10px;background:transparent;color:var(--ink3);border:1px solid var(--border2);border-radius:var(--radius);cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+.btn-edit-meta:hover{background:var(--bg);border-color:var(--accent);color:var(--ink2)}
+.legend-strip{padding:6px 24px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap;flex-shrink:0;align-items:center}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink2)}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+.text-panel{flex:1;overflow-y:auto;padding:32px 44px 48px;background:var(--panel)}
+.doc-meta-bar{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink3);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap}
+.doc-meta-bar strong{color:var(--ink2)}
+.hint-banner{margin-bottom:16px;padding:9px 14px;background:rgba(160,32,32,.07);border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;font-size:12px;color:var(--ink2)}
+.hint-banner strong{color:var(--accent)}
+#doc-text{font-family:'Lora',serif;font-size:15px;line-height:1.9;color:var(--ink);text-align:justify;hyphens:auto;user-select:text;cursor:text}
+#doc-text p{margin-bottom:1em}
+/* annotation spans – display:inline is critical */
+.ann-span{border-radius:2px;padding:0 1px;border-bottom:2px solid;cursor:pointer;transition:filter .12s;display:inline}
+.ann-span:hover{filter:brightness(.85)}
+.ann-span.sel{outline:2px solid var(--accent);outline-offset:1px}
+.ann-person{background:var(--person-bg);border-color:var(--person)}
+.ann-org{background:var(--org-bg);border-color:var(--org)}
+.ann-work{background:var(--work-bg);border-color:var(--work);font-style:italic}
+.ann-date{background:var(--date-bg);border-color:var(--date)}
+.ann-place{background:var(--place-bg);border-color:var(--place)}
+.ann-other{background:var(--other-bg);border-color:var(--other)}
+/* SIDEBAR */
+.ann-sidebar{width:285px;flex-shrink:0;background:var(--sidebar);display:flex;flex-direction:column;overflow:hidden;border-left:1px solid #3a2a1a}
+.sb-head{padding:12px 14px 8px;border-bottom:1px solid #3a2a1a;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a7a6a;font-weight:500}
+.filter-row{padding:8px 14px;border-bottom:1px solid #2a2018;display:flex;flex-wrap:wrap;gap:4px}
+.type-chip{font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid;cursor:pointer;font-weight:500;transition:all .12s;opacity:.45;font-family:'Outfit',sans-serif}
+.type-chip.on{opacity:1}
+.chip-person{border-color:var(--person);color:#e08080}.chip-person.on{background:rgba(160,32,32,.25)}
+.chip-org{border-color:var(--org);color:#6090c0}.chip-org.on{background:rgba(26,74,122,.25)}
+.chip-work{border-color:var(--work);color:#c0a050}.chip-work.on{background:rgba(138,96,16,.25)}
+.chip-date{border-color:var(--date);color:#60b080}.chip-date.on{background:rgba(26,106,58,.25)}
+.chip-place{border-color:var(--place);color:#a070c0}.chip-place.on{background:rgba(90,26,122,.25)}
+.chip-other{border-color:var(--other);color:#909090}.chip-other.on{background:rgba(74,74,74,.25)}
+.ann-list{flex:1;overflow-y:auto;padding:4px 0}
+.ann-list::-webkit-scrollbar{width:3px}
+.ann-list::-webkit-scrollbar-thumb{background:#3a2a1a;border-radius:2px}
+.ann-item{padding:8px 12px;border-bottom:1px solid #1e180e;cursor:pointer;transition:background .12s;display:flex;gap:8px;align-items:flex-start}
+.ann-item:hover,.ann-item.active{background:#2a2318}
+.ann-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;margin-top:5px}
+.ann-item-body{flex:1;min-width:0}
+.ann-item-lbl{font-size:12.5px;font-weight:500;color:#e0d4c4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ann-item-txt{font-family:'Lora',serif;font-size:10.5px;color:#6a5a48;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ann-item-note{font-size:10.5px;color:#5a4a38;margin-top:2px;line-height:1.35}
+.ann-item-actions{display:flex;gap:1px;flex-shrink:0;margin-top:1px}
+.aib{background:none;border:none;cursor:pointer;font-size:13px;padding:2px 4px;line-height:1;border-radius:3px;transition:all .12s}
+.aib.edit{color:#6a5a38}.aib.edit:hover{background:rgba(184,134,11,.2);color:#c0a050}
+.aib.del{color:#4a3a28}.aib.del:hover{background:rgba(200,50,50,.2);color:#e06060}
+.ann-empty{padding:20px 14px;text-align:center;color:#4a3a28;font-size:12px;line-height:1.6}
+.ann-empty em{display:block;font-size:20px;margin-bottom:8px}
+.sb-footer{padding:10px 14px;border-top:1px solid #3a2a1a;display:flex;flex-direction:column;gap:5px}
+.btn-exp{width:100%;padding:7px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.4px;border:1px solid #4a3a28;background:transparent;color:#9a8a7a;cursor:pointer;border-radius:var(--radius);transition:all .15s;text-transform:uppercase;text-align:left;display:flex;align-items:center;gap:7px}
+.btn-exp:hover{background:#2a2318;color:#c0b09a}
+/* POPUP */
+.ann-popup{position:fixed;z-index:500;background:#fff;border:1px solid var(--border2);border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.18);width:292px;display:none;flex-direction:column;overflow:hidden;border-top:3px solid var(--accent)}
+.ann-popup.visible{display:flex}
+.pp-head{padding:9px 13px 7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;justify-content:space-between}
+.pp-title{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink2)}
+.pp-badge{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(184,134,11,.13);color:#8a6010;border:1px solid #b8860b;font-family:'DM Mono',monospace;letter-spacing:.5px}
+.pp-close{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:15px;line-height:1;margin-left:auto}
+.pp-close:hover{color:var(--accent)}
+.pp-sel{font-family:'Lora',serif;font-size:11px;font-style:italic;color:var(--ink3);padding:5px 13px;background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-body{padding:10px 13px;display:flex;flex-direction:column;gap:9px}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.type-btn{padding:5px 3px;border:1px solid var(--border2);background:var(--bg);border-radius:3px;font-size:10.5px;font-weight:500;cursor:pointer;text-align:center;color:var(--ink2);transition:all .12s;font-family:'Outfit',sans-serif}
+.type-btn.sel-type{color:#fff;border-color:transparent}
+.tb-person.sel-type{background:var(--person)}.tb-org.sel-type{background:var(--org)}.tb-work.sel-type{background:var(--work)}.tb-date.sel-type{background:var(--date)}.tb-place.sel-type{background:var(--place)}.tb-other.sel-type{background:var(--other)}
+.tb-person:hover:not(.sel-type){background:var(--person-bg);border-color:var(--person);color:var(--person)}
+.tb-org:hover:not(.sel-type){background:var(--org-bg);border-color:var(--org);color:var(--org)}
+.tb-work:hover:not(.sel-type){background:var(--work-bg);border-color:var(--work);color:var(--work)}
+.tb-date:hover:not(.sel-type){background:var(--date-bg);border-color:var(--date);color:var(--date)}
+.tb-place:hover:not(.sel-type){background:var(--place-bg);border-color:var(--place);color:var(--place)}
+.tb-other:hover:not(.sel-type){background:var(--other-bg);border-color:var(--other);color:var(--other)}
+.pp-field{display:flex;flex-direction:column;gap:3px}
+.pp-field label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3)}
+.pp-field input,.pp-field textarea{font-family:'Outfit',sans-serif;font-size:12.5px;padding:6px 9px;border:1px solid var(--border2);border-radius:var(--radius);background:#fff;color:var(--ink);outline:none}
+.pp-field input:focus,.pp-field textarea:focus{border-color:var(--accent)}
+.pp-field textarea{resize:none;height:52px;line-height:1.4}
+.pp-actions{display:flex;gap:7px;padding:0 13px 11px}
+.btn-save{flex:1;padding:7px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity .15s}
+.btn-save:hover{opacity:.85}
+.btn-cancel{padding:7px 12px;background:var(--bg);color:var(--ink2);border:1px solid var(--border2);border-radius:var(--radius);font-size:12.5px;cursor:pointer;font-family:'Outfit',sans-serif}
+/* NETWORK */
+#view-network{flex-direction:row}
+.net-sidebar{width:200px;flex-shrink:0;background:var(--sidebar);display:flex;flex-direction:column;overflow:hidden;border-right:1px solid #3a2a1a}
+.net-sb-section{padding:11px 14px;border-bottom:1px solid #2a2018}
+.net-sb-title{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#6a5a48;font-weight:500;margin-bottom:7px}
+.doc-filter-item{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:11.5px;color:#c0b09a;user-select:none}
+.doc-cb{width:13px;height:13px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.doc-filter-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-color-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.net-stat{font-family:'DM Mono',monospace;font-size:10px;color:#6a5a48;line-height:1.9}
+.net-stat strong{color:#9a8a7a}
+.net-legend{display:flex;flex-direction:column;gap:5px}
+.net-leg-item{display:flex;align-items:center;gap:7px;font-size:10.5px;color:#9a8a7a}
+.net-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.net-canvas{flex:1;position:relative;background:#16120d;overflow:hidden}
+#net-svg{width:100%;height:100%}
+.net-zoom-controls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:4px;z-index:50}
+.net-zoom-controls button{width:30px;height:30px;background:#2a2318;border:1px solid #4a3a28;color:#c0b09a;border-radius:4px;cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.net-zoom-controls button:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.net-tooltip{position:absolute;background:var(--sidebar);border:1px solid #3a2a1a;border-radius:5px;max-width:225px;min-width:165px;box-shadow:0 6px 24px rgba(0,0,0,.5);display:none;pointer-events:none;border-top:2px solid var(--accent);z-index:100}
+.net-tooltip.visible{display:block}
+.ntt-head{padding:7px 11px 5px;border-bottom:1px solid #2a2018}
+.ntt-type{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+.ntt-name{font-family:'Lora',serif;font-size:13px;font-weight:600;color:#f0e8d8}
+.ntt-body{padding:6px 11px 8px;font-size:11px;color:#8a7a6a;line-height:1.5}
+.ntt-docs{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px}
+.ntt-doc-tag{font-size:9px;padding:1px 6px;border-radius:10px;background:#2a2318;color:#9a8a7a;font-family:'DM Mono',monospace}
+.node-info-panel{position:absolute;bottom:16px;left:16px;background:var(--sidebar);border:1px solid #3a2a1a;border-radius:6px;max-width:255px;display:none;border-top:3px solid var(--accent)}
+.node-info-panel.visible{display:block}
+.nip-head{padding:9px 13px 7px;border-bottom:1px solid #2a2018;display:flex;align-items:center;justify-content:space-between}
+.nip-name{font-family:'Lora',serif;font-size:13px;font-weight:600;color:#f0e8d8}
+.nip-close{background:none;border:none;color:#5a4a38;cursor:pointer;font-size:13px}
+.nip-close:hover{color:#c0b09a}
+.nip-body{padding:8px 13px 11px;font-size:11px;color:#8a7a6a;line-height:1.6}
+.nip-ann-list{margin-top:7px;display:flex;flex-direction:column;gap:4px}
+.nip-ann{padding:5px 8px;background:#1e180e;border-radius:3px;border-left:2px solid}
+.nip-ann-txt{font-family:'Lora',serif;font-size:11px;color:#9a8a7a;font-style:italic}
+.nip-ann-doc{font-family:'DM Mono',monospace;font-size:9px;color:#5a4a38}
+.edge-tooltip{position:absolute;background:#2a2318;border:1px solid #3a2a1a;border-radius:4px;padding:7px 11px;font-size:11px;color:#9a8a7a;display:none;pointer-events:none;max-width:200px;z-index:100}
+.edge-tooltip.visible{display:block}
+/* EXPORT */
+.exp-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:800;align-items:center;justify-content:center}
+.exp-overlay.visible{display:flex}
+.exp-modal{background:#0f1923;border-radius:6px;width:min(800px,94vw);max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden}
+.exp-head{padding:11px 18px;border-bottom:1px solid #1e2d3d;display:flex;align-items:center;gap:10px}
+.exp-dots{display:flex;gap:5px}
+.exp-d{width:9px;height:9px;border-radius:50%}
+.exp-d:nth-child(1){background:#ff5f57}.exp-d:nth-child(2){background:#ffbd2e}.exp-d:nth-child(3){background:#28c840}
+.exp-fn{font-family:'DM Mono',monospace;font-size:10px;color:#8b949e}
+.exp-close{margin-left:auto;background:none;border:none;color:#8b949e;cursor:pointer;font-size:16px}
+.exp-close:hover{color:#fff}
+.exp-body{flex:1;overflow:auto;padding:18px;font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.65;color:#e6edf3;white-space:pre-wrap;word-break:break-word}
+.t-tag{color:#79c0ff}.t-attr{color:#ffa657}.t-val{color:#a5d6ff}.t-comm{color:#8b949e;font-style:italic}.t-pi{color:#d2a8ff}
+</style>
+</head>
+<body>
+<header>
+  <div class="app-logo">TEI <span>Annotáló</span> + Hálózat</div>
+  <nav class="nav-tabs">
+    <button class="ntab active" id="ntab-docs" onclick="setTab('docs')">📂 Dokumentumok <span class="badge" id="badge-docs">3</span></button>
+    <button class="ntab" id="ntab-annotate" onclick="setTab('annotate')">✏️ Annotálás</button>
+    <button class="ntab" id="ntab-network" onclick="setTab('network')">🕸 Kapcsolatháló</button>
+  </nav>
+  <div class="header-right">
+    <span id="save-indicator" style="font-family: &quot;DM Mono&quot;, monospace; font-size: 10px; color: rgb(58, 74, 42); letter-spacing: 0.5px; transition: color 0.4s; display: none;">✓ mentve</span>
+    <button class="btn-sm" onclick="showExport('tei')">↓ TEI XML</button>
+    <button class="btn-sm" onclick="showExport('json')">↓ JSON</button>
+    <button class="btn-sm" style="border-color:#6a8a5a;color:#90c070" onclick="saveAsHtml()" title="Letölti az egész eszközt az aktuális annotációkkal együtt">↓ HTML mentés</button>
+  </div>
+</header>
+
+<!-- DOCS -->
+<div class="view active" id="view-docs">
+  <div class="docs-toolbar">
+    <h2>Dokumentumok</h2>
+    <button class="btn-primary" onclick="openDocModal()">+ Új dokumentum</button>
+  </div>
+  <div class="doc-grid" id="doc-grid"><div class="doc-card demo-card">
+      <div class="doc-card-title">Tóth Dezső levele Szilágyi Dezsőnek (1981)</div>
+      <div class="doc-card-meta">1981. augusztus 5.<br>MNL Ol XIX-A-2-ad-AGy-556-6-1981</div>
+      <div class="doc-card-stats"><span style="font-size:11px;color:var(--ink3)">Nincs annotáció</span></div>
+      <div class="doc-card-actions">
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDoc('doc1')">Annotálás →</button>
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDocModal('doc1')">✎ Szerkesztés</button>
+        
+      </div></div><div class="doc-card demo-card">
+      <div class="doc-card-title">Rigó László osztályvezető (Művelődési Minisztérium Színházi Osztály) feljegyzése Aczél György miniszterelnök-helyettes részére Kornis Mihály Halleluja című darabjának bemutatásával kapcsolatban</div>
+      <div class="doc-card-meta">1981. június 1.<br>MNL OL XIX-I-9-a – Színház és Filmművészet valamint a Sajtó és Tájékoztatási önálló osztály anyagai – iktatószám nélkül – 1981. (54. doboz)</div>
+      <div class="doc-card-stats"><span style="font-size:11px;color:var(--ink3)">Nincs annotáció</span></div>
+      <div class="doc-card-actions">
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDoc('doc2')">Annotálás →</button>
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDocModal('doc2')">✎ Szerkesztés</button>
+        
+      </div></div><div class="doc-card demo-card">
+      <div class="doc-card-title">Tóth Dezső miniszterhelyettes feljegyzése Rigó László osztályvezető részére</div>
+      <div class="doc-card-meta">1981. június 17.<br>MOL XIX-A-2-ad-AGy-556-1981. (115. doboz)</div>
+      <div class="doc-card-stats"><span style="font-size:11px;color:var(--ink3)">Nincs annotáció</span></div>
+      <div class="doc-card-actions">
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDoc('doc3')">Annotálás →</button>
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDocModal('doc3')">✎ Szerkesztés</button>
+        
+      </div></div><div class="add-card" onclick="openDocModal()"><div style="font-size:28px;opacity:.5">＋</div><div style="font-size:12px;font-weight:500">Új dokumentum</div></div></div>
+</div>
+
+<!-- ANNOTATE -->
+<div class="view" id="view-annotate">
+  <div class="ann-main">
+    <div class="ann-doc-bar">
+      <label>Dokumentum:</label>
+      <select class="doc-select" id="doc-select" onchange="selectDoc(this.value)"><option value="">— Válassz dokumentumot —</option><option value="doc1" selected="">Tóth Dezső levele Szilágyi Dezsőnek (1981)</option><option value="doc2">Rigó László osztályvezető (Művelődési Minisztérium Színházi Osztály) feljegyzése Aczél György miniszterelnök-helyettes részére Kornis Mihály Halleluja című darabjának bemutatásával kapcsolatban</option><option value="doc3">Tóth Dezső miniszterhelyettes feljegyzése Rigó László osztályvezető részére</option></select>
+      <button class="btn-edit-meta" id="btn-edit-meta" onclick="openDocModal(activeId)" style="display: flex;">✎ Metaadatok</button>
+    </div>
+    <div class="legend-strip">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--person)"></div>Személy</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--org)"></div>Intézmény</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--work)"></div>Mű</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--date)"></div>Dátum</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--place)"></div>Hely</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--other)"></div>Egyéb</div>
+      <span style="margin-left:auto;font-size:11px;color:var(--ink3);font-style:italic">Jelölj ki szövegrészt az annotáláshoz</span>
+    </div>
+    <div class="text-panel">
+      <div class="hint-banner" id="hint-banner" style="display: none;"><strong>Útmutató:</strong> Válassz dokumentumot, majd jelölj ki egy szövegrészt az annotáláshoz.</div>
+      <div class="doc-meta-bar" id="doc-meta-bar"><span><strong>Dokumentum:</strong> Tóth Dezső levele Szilágyi Dezsőnek (1981)</span><span><strong>Dátum:</strong> 1981. augusztus 5.</span><span><strong>Jelzet:</strong> MNL Ol XIX-A-2-ad-AGy-556-6-1981</span></div>
+      <div id="doc-text"><p data-ps="0">Kedves Sziládi Elvtárs! </p><p data-ps="26">Ez év június 26-án kelt, a Hallelujá-val kapcsolatos, párt- és állami vezető elvtársakhoz írt levelére a címzettek nevében válaszolok.</p><p data-ps="162">Egyetértünk azzal, hogy a Nemzeti Színház nemzeti, s mint ilyen, reprezentatív intézmény. Azzal azonban nem, hogy Igazgató elvtárs Kornis Mihály szóbanforgó darabjának a Katona József Színházban való műsorratűzéséhez ragaszkodik.</p><p data-ps="393">A Halleluja az Ön fejtegetése szerint sem a fiatal, hanem a legfiatalabb nemzedék társadalmi élményének megfogalmazása. Kornis Mihály darabja kétségtelen tehetséget mutat, de nem üti meg a Nemzeti Színházra kötelező mércét.</p><p data-ps="618">Fentiek alapján nincs kifogásunk az ellen, hogy a Halleluja a Játékszín műsorán maradjon, de a Katona József Színházba ne kerüljön át.</p><p data-ps="754">Budapest, 1981. augusztus 5. </p><p data-ps="785">Elvtársi üdvözlettel: Tóth Dezső</p></div>
+    </div>
+  </div>
+  <div class="ann-sidebar">
+    <div class="sb-head">Annotációk</div>
+    <div class="filter-row" id="filter-row">
+      <div class="type-chip chip-person on" data-type="person" onclick="toggleFilter('person',this)">Személy</div>
+      <div class="type-chip chip-org on" data-type="org" onclick="toggleFilter('org',this)">Intézmény</div>
+      <div class="type-chip chip-work on" data-type="work" onclick="toggleFilter('work',this)">Mű</div>
+      <div class="type-chip chip-date on" data-type="date" onclick="toggleFilter('date',this)">Dátum</div>
+      <div class="type-chip chip-place on" data-type="place" onclick="toggleFilter('place',this)">Hely</div>
+      <div class="type-chip chip-other on" data-type="other" onclick="toggleFilter('other',this)">Egyéb</div>
+    </div>
+    <div class="ann-list" id="ann-list"><div class="ann-empty"><em>✏️</em>Még nincs annotáció.<br>Jelölj ki szövegrészt.</div></div>
+    <div class="sb-footer">
+      <button class="btn-exp" onclick="showExport('tei')"><span>📄</span> TEI XML export</button>
+      <button class="btn-exp" onclick="showExport('json')"><span>{ }</span> JSON export</button>
+    </div>
+  </div>
+</div>
+
+<!-- NETWORK -->
+<div class="view" id="view-network">
+  <div class="net-sidebar">
+    <div class="net-sb-section">
+      <div class="net-sb-title">Dokumentumok</div>
+      <div id="doc-filter-list">
+    <label class="doc-filter-item"><input type="checkbox" class="doc-cb" checked="" onchange="toggleDocF('doc1',this.checked)">
+    <div class="doc-color-dot" style="background:#c07040"></div>
+    <span class="doc-filter-label">Tóth Dezső levele Szilágyi Dezsőnek (1981)</span></label>
+    <label class="doc-filter-item"><input type="checkbox" class="doc-cb" checked="" onchange="toggleDocF('doc2',this.checked)">
+    <div class="doc-color-dot" style="background:#4080a0"></div>
+    <span class="doc-filter-label">Rigó László osztályvezető (Művelődési Minisztérium Színházi Osztály) feljegyzése Aczél György miniszterelnök-helyettes részére Kornis Mihály Halleluja című darabjának bemutatásával kapcsolatban</span></label>
+    <label class="doc-filter-item"><input type="checkbox" class="doc-cb" checked="" onchange="toggleDocF('doc3',this.checked)">
+    <div class="doc-color-dot" style="background:#50a060"></div>
+    <span class="doc-filter-label">Tóth Dezső miniszterhelyettes feljegyzése Rigó László osztályvezető részére</span></label></div>
+    </div>
+    <div class="net-sb-section">
+      <div class="net-sb-title">Entitástípusok</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px" id="net-type-filter"><div class="type-chip chip-person on" onclick="toggleNetT('person',this)">Személy</div><div class="type-chip chip-org on" onclick="toggleNetT('org',this)">Intézmény</div><div class="type-chip chip-work on" onclick="toggleNetT('work',this)">Mű</div><div class="type-chip chip-date on" onclick="toggleNetT('date',this)">Dátum</div><div class="type-chip chip-place on" onclick="toggleNetT('place',this)">Hely</div><div class="type-chip chip-other on" onclick="toggleNetT('other',this)">Egyéb</div></div>
+    </div>
+    <div class="net-sb-section">
+      <div class="net-sb-title">Statisztika</div>
+      <div class="net-stat" id="net-stat"><strong>Csúcsok:</strong> 22<br><strong>Élek:</strong> 166<br><strong>Dok.:</strong> 3</div>
+    </div>
+    <div class="net-sb-section">
+      <div class="net-sb-title">Jelmagyarázat</div>
+      <div class="net-legend">
+        <div class="net-leg-item"><div class="net-leg-dot" style="background:var(--person)"></div>Személy</div>
+        <div class="net-leg-item"><div class="net-leg-dot" style="background:var(--org)"></div>Intézmény</div>
+        <div class="net-leg-item"><div class="net-leg-dot" style="background:var(--work)"></div>Mű</div>
+        <div class="net-leg-item"><div class="net-leg-dot" style="background:var(--date)"></div>Dátum</div>
+        <div class="net-leg-item"><div class="net-leg-dot" style="background:var(--place)"></div>Hely</div>
+        <div class="net-leg-item"><div class="net-leg-dot" style="background:var(--other)"></div>Egyéb</div>
+        <div class="net-leg-item" style="margin-top:4px"><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#c08060" stroke-width="2"></line></svg>Dokumentumon belüli</div>
+        <div class="net-leg-item"><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#6090c0" stroke-width="2" stroke-dasharray="4,2"></line></svg>Keresztdokumentum</div>
+      </div>
+    </div>
+    <div style="padding:12px 14px;margin-top:auto;border-top:1px solid #2a2018">
+      <button class="btn-exp" onclick="refreshNetwork()">↺ Hálózat frissítése</button>
+    </div>
+  </div>
+  <div class="net-canvas" id="net-canvas">
+    <svg id="net-svg"><g transform="translate(621,342.5) scale(1)"><g><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="110.9661415993806" y2="76.7041981725446"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="32.215722850310236" y2="9.836811703208788"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="-61.02608146124885" y2="49.25028225737007"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="-87.72235714299714" y2="235.17483486217063"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-73.95338711371915" y1="142.71401258508894" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="4.117691453623979" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="32.215722850310236" y2="9.836811703208788"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="4.117691453623979" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-61.02608146124885" y2="49.25028225737007"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-87.72235714299714" y2="235.17483486217063"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="4.117691453623979" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-61.02608146124885" y2="49.25028225737007"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-87.72235714299714" y2="235.17483486217063"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-87.72235714299714" y2="235.17483486217063"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="16.48555125022054" y1="106.74791279326051" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-61.02608146124885" y2="49.25028225737007"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="110.9661415993806" y2="76.7041981725446"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="120.0075533596017" y2="-57.60795053643057"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-39.384540300800836" y2="-138.45403470482367"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="32.215722850310236" y2="9.836811703208788"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="120.0075533596017" y2="-57.60795053643057"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-39.384540300800836" y2="-138.45403470482367"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="120.0075533596017" y2="-57.60795053643057"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-39.384540300800836" y2="-138.45403470482367"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="-39.384540300800836" y2="-138.45403470482367"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="32.215722850310236" y2="9.836811703208788"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="120.0075533596017" y1="-57.60795053643057" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="32.215722850310236" y2="9.836811703208788"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="-49.51338445490803" y2="-46.76164037252139"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-39.384540300800836" y1="-138.45403470482367" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#5a80b0" stroke-dasharray="6,3" stroke-width="3.5455844122715714" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="33.3688129226655" y2="-85.99200387609076"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-49.51338445490803" y1="-46.76164037252139" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="-11.048318904458027" y2="-223.87976080498564"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="33.3688129226655" y1="-85.99200387609076" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="152.425899765819" y2="-143.82291810460245"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-11.048318904458027" y1="-223.87976080498564" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="152.425899765819" y1="-143.82291810460245" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="152.425899765819" y1="-143.82291810460245" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="152.425899765819" y1="-143.82291810460245" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="152.425899765819" y1="-143.82291810460245" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="152.425899765819" y1="-143.82291810460245" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="152.425899765819" y1="-143.82291810460245" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="65.01854316003943" y2="-172.39252719372368"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="65.01854316003943" y1="-172.39252719372368" x2="181.6605217482038" y2="10.268226145883059"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="65.01854316003943" y1="-172.39252719372368" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="65.01854316003943" y1="-172.39252719372368" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="65.01854316003943" y1="-172.39252719372368" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="181.6605217482038" y1="10.268226145883059" x2="16.48555125022054" y2="106.74791279326051"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="181.6605217482038" y1="10.268226145883059" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="181.6605217482038" y1="10.268226145883059" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="16.48555125022054" y1="106.74791279326051" x2="-108.9988307214335" y2="-194.7525669973371"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="16.48555125022054" y1="106.74791279326051" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-108.9988307214335" y1="-194.7525669973371" x2="210.15673954497157" y2="-75.0974753719049"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-87.72235714299714" y2="235.17483486217063"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-2.304813055821323" y2="196.9697574462585"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-124.3968765158035" y1="-103.95291164887344" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-2.304813055821323" y2="196.9697574462585"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-61.02608146124885" y1="49.25028225737007" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-2.304813055821323" y2="196.9697574462585"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="110.9661415993806" y1="76.7041981725446" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-2.304813055821323" y2="196.9697574462585"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="32.215722850310236" y1="9.836811703208788" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="-2.304813055821323" y2="196.9697574462585"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-87.72235714299714" y1="235.17483486217063" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-2.304813055821323" y1="196.9697574462585" x2="-137.0809516551219" y2="-10.774212275371083"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-2.304813055821323" y1="196.9697574462585" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-2.304813055821323" y1="196.9697574462585" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-2.304813055821323" y1="196.9697574462585" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="-158.34421757086935" y2="173.73220940348358"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-137.0809516551219" y1="-10.774212275371083" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-158.34421757086935" y1="173.73220940348358" x2="83.5278249994923" y2="169.91236804402024"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="-158.34421757086935" y1="173.73220940348358" x2="-152.2494741612522" y2="81.88486463374566"></line><line stroke="#8a6040" stroke-dasharray="none" stroke-width="2.8" stroke-opacity="0.65" style="cursor: pointer;" x1="83.5278249994923" y1="169.91236804402024" x2="-152.2494741612522" y2="81.88486463374566"></line></g><g><g transform="translate(-73.95338711371915,142.71401258508894)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Szilágyi Dezső</text><circle r="15" fill="#a02020" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Szilágyi Dezső</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Szilágyi Dezső</text></g><g transform="translate(110.9661415993806,76.7041981725446)" style="cursor: pointer;"><text text-anchor="middle" dy="36.24744871391589" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Halleluja</text><circle r="29.24744871391589" fill="none" stroke="#8a6010" stroke-opacity="0.22" stroke-width="3"></circle><circle r="22.24744871391589" fill="#8a6010" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="11" font-family="Outfit,sans-serif" font-weight="500" fill="#f0e8d8" pointer-events="none">Halleluja</text><text text-anchor="middle" dy="36.24744871391589" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Halleluja</text></g><g transform="translate(32.215722850310236,9.836811703208788)" style="cursor: pointer;"><text text-anchor="middle" dy="35.180339887498945" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Nemzeti Színház</text><circle r="28.18033988749895" fill="none" stroke="#1a4a7a" stroke-opacity="0.22" stroke-width="3"></circle><circle r="21.18033988749895" fill="#1a4a7a" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="11" font-family="Outfit,sans-serif" font-weight="500" fill="#f0e8d8" pointer-events="none">Nemzeti Színház</text><text text-anchor="middle" dy="35.180339887498945" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Nemzeti Színház</text></g><g transform="translate(-61.02608146124885,49.25028225737007)" style="cursor: pointer;"><text text-anchor="middle" dy="34" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Kornis Mihály</text><circle r="27" fill="none" stroke="#a02020" stroke-opacity="0.22" stroke-width="3"></circle><circle r="20" fill="#a02020" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="11" font-family="Outfit,sans-serif" font-weight="500" fill="#f0e8d8" pointer-events="none">Kornis Mihály</text><text text-anchor="middle" dy="34" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Kornis Mihály</text></g><g transform="translate(-87.72235714299714,235.17483486217063)" style="cursor: pointer;"><text text-anchor="middle" dy="32.66025403784438" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Katona József Szín…</text><circle r="25.660254037844386" fill="none" stroke="#1a4a7a" stroke-opacity="0.22" stroke-width="3"></circle><circle r="18.660254037844386" fill="#1a4a7a" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="11" font-family="Outfit,sans-serif" font-weight="500" fill="#f0e8d8" pointer-events="none">Katona József …</text><text text-anchor="middle" dy="32.66025403784438" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Katona József Szín…</text></g><g transform="translate(-49.51338445490803,-46.76164037252139)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Játékszín</text><circle r="24.071067811865476" fill="none" stroke="#1a4a7a" stroke-opacity="0.22" stroke-width="3"></circle><circle r="17.071067811865476" fill="#1a4a7a" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Játékszín</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Játékszín</text></g><g transform="translate(16.48555125022054,106.74791279326051)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Budapest</text><circle r="24.071067811865476" fill="none" stroke="#5a1a7a" stroke-opacity="0.22" stroke-width="3"></circle><circle r="17.071067811865476" fill="#5a1a7a" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Budapest</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Budapest</text></g><g transform="translate(-152.2494741612522,81.88486463374566)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Tóth Dezső</text><circle r="24.071067811865476" fill="none" stroke="#a02020" stroke-opacity="0.22" stroke-width="3"></circle><circle r="17.071067811865476" fill="#a02020" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Tóth Dezső</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Tóth Dezső</text></g><g transform="translate(-124.3968765158035,-103.95291164887344)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Aczél György</text><circle r="24.071067811865476" fill="none" stroke="#a02020" stroke-opacity="0.22" stroke-width="3"></circle><circle r="17.071067811865476" fill="#a02020" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Aczél György</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Aczél György</text></g><g transform="translate(120.0075533596017,-57.60795053643057)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Kertész-Kornis Mih…</text><circle r="17.071067811865476" fill="#a02020" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Kertész-Kornis…</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Kertész-Kornis Mih…</text></g><g transform="translate(-39.384540300800836,-138.45403470482367)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Színház c. lap</text><circle r="15" fill="#1a4a7a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Színház c. lap</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Színház c. lap</text></g><g transform="translate(33.3688129226655,-85.99200387609076)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">1980/81-i évad</text><circle r="15" fill="#1a6a3a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">1980/81-i évad</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">1980/81-i évad</text></g><g transform="translate(-11.048318904458027,-223.87976080498564)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Agit[ációs és] Pro…</text><circle r="15" fill="#1a4a7a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Agit[ációs és]…</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Agit[ációs és] Pro…</text></g><g transform="translate(152.425899765819,-143.82291810460245)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Szolnoki Szigliget…</text><circle r="15" fill="#1a4a7a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Szolnoki Szigl…</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Szolnoki Szigliget…</text></g><g transform="translate(-137.0809516551219,-10.774212275371083)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Sándor Pál</text><circle r="24.071067811865476" fill="none" stroke="#a02020" stroke-opacity="0.22" stroke-width="3"></circle><circle r="17.071067811865476" fill="#a02020" fill-opacity="0.85" stroke="#f0e8d8" stroke-width="2"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Sándor Pál</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Sándor Pál</text></g><g transform="translate(65.01854316003943,-172.39252719372368)" style="cursor: pointer;"><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Kornis</text><circle r="17.071067811865476" fill="#a02020" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Kornis</text><text text-anchor="middle" dy="31.071067811865476" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Kornis</text></g><g transform="translate(181.6605217482038,10.268226145883059)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Zsámbéki</text><circle r="15" fill="#a02020" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Zsámbéki</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Zsámbéki</text></g><g transform="translate(-108.9988307214335,-194.7525669973371)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">1981. június 1.</text><circle r="15" fill="#1a6a3a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">1981. június 1.</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">1981. június 1.</text></g><g transform="translate(210.15673954497157,-75.0974753719049)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Rigó László</text><circle r="15" fill="#a02020" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Rigó László</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Rigó László</text></g><g transform="translate(-2.304813055821323,196.9697574462585)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Szolnok</text><circle r="15" fill="#5a1a7a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Szolnok</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Szolnok</text></g><g transform="translate(-158.34421757086935,173.73220940348358)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">Budapest,</text><circle r="15" fill="#5a1a7a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">Budapest,</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">Budapest,</text></g><g transform="translate(83.5278249994923,169.91236804402024)" style="cursor: pointer;"><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="none" pointer-events="none" stroke="#16120d" stroke-width="3" stroke-linejoin="round">1981. június 17</text><circle r="15" fill="#1a6a3a" fill-opacity="0.85" stroke="rgba(255,255,255,.2)" stroke-width="1"></circle><text text-anchor="middle" dy="0.35em" font-size="9" font-family="Outfit,sans-serif" font-weight="500" fill="transparent" pointer-events="none">1981. június 17</text><text text-anchor="middle" dy="29" font-size="10.5" font-family="Outfit,sans-serif" font-weight="500" fill="#c8b89a" pointer-events="none">1981. június 17</text></g></g></g></svg>
+    <div class="net-zoom-controls">
+      <button onclick="netZoomIn()" title="Nagyítás">＋</button>
+      <button onclick="netZoomFit()" title="Illesztés">⊡</button>
+      <button onclick="netZoomOut()" title="Kicsinyítés">－</button>
+    </div>
+    <div class="net-tooltip" id="net-tooltip"></div>
+    <div class="node-info-panel" id="node-info-panel"></div>
+    <div class="edge-tooltip" id="edge-tooltip"></div>
+    <div id="net-empty" style="position: absolute; inset: 0px; display: none; align-items: center; justify-content: center; color: rgb(74, 58, 40); font-size: 14px; flex-direction: column; gap: 10px;">
+      <span style="font-size:36px">🕸</span>
+      <span>Adj hozzá annotációkat, majd kattints a „Hálózat frissítése" gombra</span>
+    </div>
+  </div>
+</div>
+
+<!-- ANNOTATION POPUP -->
+<div class="ann-popup" id="ann-popup" style="left: 282.195px; top: 303px;">
+  <div class="pp-head">
+    <span class="pp-title" id="pp-title">Új annotáció</span>
+    <span class="pp-badge" id="pp-badge" style="display:none">SZERKESZTÉS</span>
+    <button class="pp-close" onclick="closePopup()">✕</button>
+  </div>
+  <div class="pp-sel" id="pp-sel">"Budapest,"</div>
+  <div class="pp-body">
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:5px">Típus</div>
+      <div class="type-grid">
+        <button class="type-btn tb-person" onclick="selType('person',this)">Személy</button>
+        <button class="type-btn tb-org" onclick="selType('org',this)">Intézmény</button>
+        <button class="type-btn tb-work" onclick="selType('work',this)">Mű</button>
+        <button class="type-btn tb-date" onclick="selType('date',this)">Dátum</button>
+        <button class="type-btn tb-place sel-type" onclick="selType('place',this)">Hely</button>
+        <button class="type-btn tb-other" onclick="selType('other',this)">Egyéb</button>
+      </div>
+    </div>
+    <div class="pp-field">
+      <label>Azonosító / név <span style="color:var(--accent)">*</span></label>
+      <input type="text" id="pp-label" placeholder="pl. Tóth Dezső…">
+    </div>
+    <div class="pp-field">
+      <label>Megjegyzés</label>
+      <textarea id="pp-notes" placeholder="Rövid leírás, hivatkozás…"></textarea>
+    </div>
+  </div>
+  <div class="pp-actions">
+    <button class="btn-save" id="pp-save-btn" onclick="saveAnn()">Mentés</button>
+    <button class="btn-cancel" onclick="closePopup()">Mégse</button>
+  </div>
+</div>
+
+<!-- DOC MODAL -->
+<div class="modal-overlay" id="doc-modal" onclick="closeDocModal(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="doc-modal-title">Metaadatok szerkesztése</h3>
+      <button class="modal-close" onclick="closeDocModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-field">
+        <label>Cím <span style="color:var(--accent)">*</span></label>
+        <input type="text" id="dm-title" placeholder="pl. Levél a Halleluja ügyében">
+      </div>
+      <div class="form-field">
+        <label>Dátum</label>
+        <input type="text" id="dm-date" placeholder="pl. 1981. augusztus 5.">
+      </div>
+      <div class="form-field">
+        <label>Levéltári jelzet / forrás</label>
+        <input type="text" id="dm-ref" placeholder="pl. MOL XIX-A-2-ad-AGy-556-6-1981">
+      </div>
+      <div class="form-field" id="dm-text-wrap">
+        <label id="dm-text-label">Szöveg</label>
+        <textarea id="dm-text" style="min-height:140px" placeholder="Másold ide a forrásszöveg tisztított változatát…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeDocModal()">Mégse</button>
+      <button class="btn-primary" id="dm-save-btn" onclick="saveDocModal()">Mentés</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT OVERLAY -->
+<div class="exp-overlay" id="exp-overlay" onclick="closeExp(event)">
+  <div class="exp-modal">
+    <div class="exp-head">
+      <div class="exp-dots"><div class="exp-d"></div><div class="exp-d"></div><div class="exp-d"></div></div>
+      <span class="exp-fn" id="exp-fn">export.xml</span>
+      <button class="exp-close" onclick="closeExp()">✕</button>
+    </div>
+    <div class="exp-body" id="exp-body"></div>
+  </div>
+</div>
+
+<script>
+// ════════════ CONSTANTS ════════════
+const TC={person:'#a02020',org:'#1a4a7a',work:'#8a6010',date:'#1a6a3a',place:'#5a1a7a',other:'#4a4a4a'};
+const TL={person:'Személy',org:'Intézmény',work:'Mű',date:'Dátum',place:'Hely',other:'Egyéb'};
+const TT={person:'persName',org:'orgName',work:'title',date:'date',place:'placeName',other:'name'};
+const DC=['#c07040','#4080a0','#50a060','#9050a0','#a08030','#e06060'];
+
+// ════════════ STATE ════════════
+let docs=[],activeId=null,pendSel=null,editId=null,pendType=null;
+let activeF=new Set(['person','org','work','date','place','other']);
+let selAnnId=null,nxtId=1,sim=null;
+let netDocF=new Set(),netTypeF=new Set(['person','org','work','date','place','other']);
+let editDocId=null;
+const mkId=()=>'a'+(nxtId++);
+
+// ════════════ DEMO DATA ════════════
+// ══════════ DEMO DATA ══════════
+const DEMO=[
+  {
+    "id": "doc1",
+    "title": "Tóth Dezső levele Szilágyi Dezsőnek (1981)",
+    "date": "1981. augusztus 5.",
+    "ref": "MNL Ol XIX-A-2-ad-AGy-556-6-1981",
+    "text": "Kedves Sziládi Elvtárs! \n\nEz év június 26-án kelt, a Hallelujá-val kapcsolatos, párt- és állami vezető elvtársakhoz írt levelére a címzettek nevében válaszolok.\n\nEgyetértünk azzal, hogy a Nemzeti Színház nemzeti, s mint ilyen, reprezentatív intézmény. Azzal azonban nem, hogy Igazgató elvtárs Kornis Mihály szóbanforgó darabjának a Katona József Színházban való műsorratűzéséhez ragaszkodik.\n\nA Halleluja az Ön fejtegetése szerint sem a fiatal, hanem a legfiatalabb nemzedék társadalmi élményének megfogalmazása. Kornis Mihály darabja kétségtelen tehetséget mutat, de nem üti meg a Nemzeti Színházra kötelező mércét.\n\nFentiek alapján nincs kifogásunk az ellen, hogy a Halleluja a Játékszín műsorán maradjon, de a Katona József Színházba ne kerüljön át.\n\nBudapest, 1981. augusztus 5. \n\nElvtársi üdvözlettel: Tóth Dezső",
+    "annotations": []
+  },
+  {
+    "id": "doc2",
+    "title": "Rigó László osztályvezető (Művelődési Minisztérium Színházi Osztály) feljegyzése Aczél György miniszterelnök-helyettes részére Kornis Mihály Halleluja című darabjának bemutatásával kapcsolatban",
+    "date": "1981. június 1.",
+    "ref": "MNL OL XIX-I-9-a – Színház és Filmművészet valamint a Sajtó és Tájékoztatási önálló osztály anyagai – iktatószám nélkül – 1981. (54. doboz)",
+    "text": "Feljegyzés Aczél György miniszterelnök-helyettes elvtársnak \n\nTárgy: Kornis Mihály HALLELUJA c. darabjának bemutatója a Játékszínben \n\nKertész-Kornis Mihály Halleluja c. drámája megjelent a szerző kötetében és a Színház c. lap mellékleteként is.336 A darabot több színház be akarta mutatni; a bemutatót végül is a Nemzeti Színháznak engedélyeztük, a Játékszínben. (A tervezett bemutató szerepelt az 1980/81-i évad előzetes összesített műsortervében, az 1. oldalon; az Agit[ációs és] Prop[aganda] Bizottság jóváhagyta.) Kertész-Kornis Mihály működéséről a Színházi Osztálynak főképp szakmai információi vannak; ma úgy tudjuk, hogy a korábbi magatartásával kapcsolatos kifogások elültek, ő is változott, darabjai játszhatóak. Ezek után nagyon fontos lenne tudnunk, hogy ezek az információk helyesek-e, mert a Szolnoki Szigligeti Színház ősszel a mű zenés változatát akarja bemutatni, Sándor Pál rendezésében. A darabról szóló írások, riportok eléggé egybehangzó megállapítása, hogy a mű a mai középgeneráció szeretetvágyáról, szeretethiányáról szól. Arról, hogy bizonyos társadalmi okokból (a közösségek, a család válsága, a közöny stb.) felerősödhetnek nálunk is az elidegenítő, a személyiség autonómiájára törő tendenciák.  E társadalmi közegben vannak, akik áldozatnak tekintik magukat, és cselekvésképtelenségükért mindig másokat, s végső soron az egész társadalmat okolják. Kornis műve bemutat egy állapotot, egy életformát, de – hivatkozva a személy fe lelősségére – kritikát is gyakorol felette. Kornis darabja tehetséges író érdekes műve, nem káros, nem sanda, bemutatásának engedélyezése helyes volt. Az is igaz viszont, hogy ez a drámatípus és -irányzat nem tartozik a magyar dráma fővonalába, s hosszabb távon aligha való a Nemzeti Színházba. Zsámbéki rendezése kiemelkedően jó, a darab fenti, pozitív értelmezését adja. A színészek kiválóak, az előadás nagy siker. Van azonban a produkcióban egy-két olyan jelenet, amely a mi ízlésünket próbára tette, – ezt jeleztük is a színháznak, bizonyos módosításokat kérve. \n\nBudapest, 1981. június 1. \n\nRigó László osztályvezető",
+    "annotations": []
+  },
+  {
+    "id": "doc3",
+    "title": "Tóth Dezső miniszterhelyettes feljegyzése Rigó László osztályvezető részére",
+    "date": "1981. június 17.",
+    "ref": "MOL XIX-A-2-ad-AGy-556-1981. (115. doboz)",
+    "text": "Nem értek egyet Osztályvezető Elvtársnak június 1-én kelt, Aczél György miniszterhelyettes elvtárshoz írt, Kornis Mihály Halleluja c. darabja bemutatójával kapcsolatos feljegyzésével. Véleményem szerint a darab nem arról szól, hogy „bizonyos társadalmi okokból felerősödhetnek nálunk is az elidegenítő, a személyiség autonómiájára törő tendenciák”. A darab az ilyen természetű és társadalmunkban is kétségtelenül meglévő tendenciák maradéktalan eluralkodását, az emberek kapcsolatteremtési lehetőségeinek totális ellehetetlenülését szuggerálja; hangsúlyozva e tekintetben a mai 30 évesek teljes támponttalanságát, és ahogyan középponti szimbólum-jelenete – egy kisgyermek nyíltszíni párnábafojtása – érzékelteti: halálraítéltetettségét. Hogy társadalmi összefüggések tekintetében se legyen félreértés: a darab elszórt megjegyzésekkel az általánosítás időbeli érvényességét az 50-es évek végétől napjainkig terjeszti; a nyíregyházi „fekete vonat” atmoszférájának sokkoló beidézésével szinkron kiszélesíti, jelezve egyszersmind, hogy a „Fent”, a „Hivatal” jóvoltából értelmes munkát egy fiatal ma csak gerinctörés árán kaphat. Ez a darab mélyen rokon azokkal a szellemi életünk különböző műfajaiban megnyilatkozó tendenciákkal, amelyek társadalmunk mai helyzetét csődnek láttatják. Ha a kritikáktól kölcsönvett érvek alapján a „szeretetvágyat” mint a darab jelentéssugallatát tudomásul vesszük, akkor mindenfajta csődhelyzetet szuggeráló alkotásra igent kellene mondani, hiszen azokban is ott munkál, ha más nem, az a „vágy”, hogy ne legyen csődhelyzet. Fentiek okán azzal sem értek egyet, hogy a darab „bemutat egy állapotot, egy életformát, de – hivatkozva a személyes felelősségre – kritikát is gyakorol felette”. A darab ugyanis általánosítása révén az állapotot, az életformát mutatja be és semmi néven nevezendő fogódzót nem ad ahhoz, hogy bármely szereplőjének „személyes felelőssége” kritika tárgya lehessen. A személyek itt kivétel nélkül társadalmi áldozatok; a szocializmuson belüli univerzális elidegenedés áldozatai, s amennyiben emberek, annyiban e társadalom ellenére azok. Az általánosító kritika kizárólag a társadalomra vonatkozik. Mindezek alapján a darab jelen formájában /szövegében és egyes rendezői megoldásaiban/ történő bemutatásának engedélyezése hiba volt. Jelentésének azzal a megállapításával, hogy ez a drámatípus „hosszabb távon aligha való a Nemzeti Színházba” – egyetértek. Ezért nem javaslom a Katona József Színház műsorának megtartásán. Szolnoki bemutatását Sándor Pál rendezésében csak átdolgozással és a rendezői koncepció ismeretében tartom lehetségesnek. \n\nBudapest, 1981. június 17. \nTóth Dezső",
+    "annotations": []
+  }
+];
+// ══════════ DEMO DATA END ══════════
+DEMO.forEach(d=>{ docs.push(d); nxtId+=40; });
+// ════════════ DEMO DATA END ════════════
+
+// ════════════ TABS ════════════
+function setTab(t){
+  ['docs','annotate','network'].forEach(x=>{
+    document.getElementById('view-'+x).classList.toggle('active',x===t);
+    document.getElementById('ntab-'+x).classList.toggle('active',x===t);
+  });
+  if(t==='docs') renderGrid();
+  if(t==='annotate') renderDocSel();
+  if(t==='network'){ renderNetFilters(); refreshNetwork(); }
+}
+
+// ════════════ DOCS TAB ════════════
+function renderGrid(){
+  document.getElementById('badge-docs').textContent=docs.length;
+  document.getElementById('doc-grid').innerHTML=docs.map((d,i)=>{
+    const tc={};(d.annotations||[]).forEach(a=>tc[a.type]=(tc[a.type]||0)+1);
+    const pills=Object.entries(tc).map(([t,n])=>`<span class="stat-pill" style="border-color:${TC[t]};color:${TC[t]}">${TL[t]}: ${n}</span>`).join('');
+    return `<div class="doc-card${i<3?' demo-card':''}">
+      <div class="doc-card-title">${e(d.title)}</div>
+      <div class="doc-card-meta">${e(d.date)}<br>${e(d.ref)}</div>
+      <div class="doc-card-stats">${pills||'<span style="font-size:11px;color:var(--ink3)">Nincs annotáció</span>'}</div>
+      <div class="doc-card-actions">
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDoc('${d.id}')">Annotálás →</button>
+        <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="openDocModal('${d.id}')">✎ Szerkesztés</button>
+        ${i>=3?`<button class="btn-secondary" style="font-size:11px;padding:4px 10px;color:#c06060;border-color:#c06060" onclick="delDoc('${d.id}')">Törlés</button>`:''}
+      </div></div>`;
+  }).join('')+`<div class="add-card" onclick="openDocModal()"><div style="font-size:28px;opacity:.5">＋</div><div style="font-size:12px;font-weight:500">Új dokumentum</div></div>`;
+}
+function openDoc(id){ activeId=id; renderDocSel(); setTab('annotate'); }
+function delDoc(id){ if(!confirm('Biztosan törlöd?')) return; docs=docs.filter(d=>d.id!==id); if(activeId===id) activeId=null; renderGrid(); }
+
+// ── Doc Modal ──
+function openDocModal(id){
+  editDocId=id||null;
+  const isEdit=!!id;
+  document.getElementById('doc-modal-title').textContent=isEdit?'Metaadatok szerkesztése':'Új dokumentum hozzáadása';
+  document.getElementById('dm-save-btn').textContent=isEdit?'Mentés':'Hozzáadás';
+  document.getElementById('dm-text-label').innerHTML=isEdit?'Szöveg':'Szöveg (plain text) <span style="color:var(--accent)">*</span>';
+  if(isEdit){
+    const d=docs.find(x=>x.id===id); if(!d) return;
+    document.getElementById('dm-title').value=d.title;
+    document.getElementById('dm-date').value=d.date||'';
+    document.getElementById('dm-ref').value=d.ref||'';
+    document.getElementById('dm-text').value=d.text;
+  } else {
+    ['dm-title','dm-date','dm-ref','dm-text'].forEach(x=>document.getElementById(x).value='');
+  }
+  document.getElementById('doc-modal').classList.add('visible');
+}
+function closeDocModal(ev){ if(ev&&ev.target!==document.getElementById('doc-modal')) return; document.getElementById('doc-modal').classList.remove('visible'); editDocId=null; }
+function saveDocModal(){
+  const title=document.getElementById('dm-title').value.trim();
+  const text=document.getElementById('dm-text').value.trim();
+  if(!title){ toast('A cím kötelező!'); return; }
+  if(editDocId){
+    const d=docs.find(x=>x.id===editDocId); if(!d) return;
+    d.title=title; d.date=document.getElementById('dm-date').value.trim()||'–'; d.ref=document.getElementById('dm-ref').value.trim()||'–';
+    if(text&&text!==d.text){
+      if(confirm('A szöveg módosítása törli az összes meglévő annotációt. Folytatod?')){ d.text=text; d.annotations=[]; }
+    }
+    if(activeId===editDocId){ loadDocEditor(activeId); renderDocSel(); }
+  } else {
+    if(!text){ toast('A szöveg kötelező!'); return; }
+    const d={id:'doc_'+Date.now(),title,date:document.getElementById('dm-date').value.trim()||'–',ref:document.getElementById('dm-ref').value.trim()||'–',text,annotations:[]};
+    docs.push(d); openDoc(d.id);
+  }
+  document.getElementById('doc-modal').classList.remove('visible'); editDocId=null; renderGrid();
+}
+
+// ════════════ ANNOTATE TAB ════════════
+function renderDocSel(){
+  const sel=document.getElementById('doc-select');
+  sel.innerHTML='<option value="">— Válassz dokumentumot —</option>'+docs.map(d=>`<option value="${d.id}"${d.id===activeId?' selected':''}>${e(d.title)}</option>`).join('');
+  document.getElementById('btn-edit-meta').style.display=activeId?'flex':'none';
+  if(activeId) loadDocEditor(activeId);
+}
+function selectDoc(id){
+  activeId=id||null;
+  document.getElementById('btn-edit-meta').style.display=activeId?'flex':'none';
+  if(activeId) loadDocEditor(activeId);
+  else{ document.getElementById('doc-meta-bar').innerHTML=''; document.getElementById('doc-text').innerHTML=''; renderSb(); }
+}
+function loadDocEditor(id){
+  const d=docs.find(x=>x.id===id); if(!d) return;
+  sanitizeAnnotations(d);
+  document.getElementById('hint-banner').style.display='none';
+  document.getElementById('doc-meta-bar').innerHTML=
+    `<span><strong>Dokumentum:</strong> ${e(d.title)}</span><span><strong>Dátum:</strong> ${e(d.date)}</span><span><strong>Jelzet:</strong> ${e(d.ref)}</span>`;
+  renderText(); renderSb();
+}
+const getDoc=()=>docs.find(d=>d.id===activeId);
+
+// ── Sanitize annotation offsets (self-healing for demo data or import drift) ──
+function sanitizeAnnotations(doc){
+  if(!doc||!doc.annotations||!doc.annotations.length) return;
+  doc.annotations.sort((a,b)=>a.start-b.start);
+  let searchFrom=0;
+  doc.annotations.forEach(a=>{
+    // Check if current offset is already correct
+    if(doc.text.slice(a.start,a.end)===a.text){
+      searchFrom=a.end; return;
+    }
+    // Try to find the text starting near the stored position (within ±80 chars)
+    const lo=Math.max(searchFrom,a.start-80);
+    const hi=Math.min(doc.text.length,a.start+80);
+    const snippet=doc.text.slice(lo,hi+a.text.length);
+    const rel=snippet.indexOf(a.text);
+    if(rel!==-1){
+      const found=lo+rel;
+      a.start=found; a.end=found+a.text.length;
+      searchFrom=a.end; return;
+    }
+    // Fallback: search from last confirmed position
+    const idx=doc.text.indexOf(a.text,searchFrom);
+    if(idx!==-1){ a.start=idx; a.end=idx+a.text.length; searchFrom=a.end; }
+  });
+}
+
+// ── Render text with paragraph-aware offsets ──
+function renderText(){
+  const doc=getDoc(); if(!doc) return;
+  const ct=document.getElementById('doc-text');
+  const anns=(doc.annotations||[]).filter(a=>activeF.has(a.type)).sort((a,b)=>a.start-b.start);
+  // Build paragraphs with exact raw-text start positions
+  const paras=[]; let cur=0;
+  doc.text.split('\n\n').forEach(p=>{ paras.push({t:p,s:cur}); cur+=p.length+2; });
+  ct.innerHTML=paras.map(para=>{
+    const pEnd=para.s+para.t.length;
+    const pA=anns.filter(a=>a.start>=para.s&&a.end<=pEnd);
+    let h='',pos=0;
+    for(const a of pA){
+      const r0=a.start-para.s,r1=a.end-para.s;
+      if(r0<pos) continue;
+      h+=e(para.t.slice(pos,r0));
+      h+=`<span class="ann-span ann-${a.type}${a.id===selAnnId?' sel':''}" data-id="${a.id}" onclick="pickAnn('${a.id}')" title="${ea(a.label)}">${e(para.t.slice(r0,r1))}</span>`;
+      pos=r1;
+    }
+    h+=e(para.t.slice(pos));
+    return `<p data-ps="${para.s}">${h}</p>`;
+  }).join('');
+}
+
+// ── Offset calculation: paragraph-aware ──
+function getOff(container,node,offset){
+  // Walk up to find <p data-ps>
+  let el=node.nodeType===3?node.parentElement:node;
+  while(el&&el.tagName!=='P'&&el!==container) el=el.parentElement;
+  const ps=(el&&el.dataset&&el.dataset.ps!=null)?parseInt(el.dataset.ps):0;
+  // Count text nodes within this paragraph
+  let total=0;
+  const w=document.createTreeWalker(el||container,NodeFilter.SHOW_TEXT,null,false);
+  while(w.nextNode()){
+    if(w.currentNode===node) return ps+total+offset;
+    total+=w.currentNode.textContent.length;
+  }
+  return ps+total+offset;
+}
+
+// ── Sidebar ──
+function renderSb(){
+  const doc=getDoc(), list=document.getElementById('ann-list');
+  if(!doc){ list.innerHTML='<div class="ann-empty"><em>📄</em>Válassz dokumentumot.</div>'; return; }
+  const anns=(doc.annotations||[]).filter(a=>activeF.has(a.type));
+  if(!anns.length){ list.innerHTML='<div class="ann-empty"><em>✏️</em>Még nincs annotáció.<br>Jelölj ki szövegrészt.</div>'; return; }
+  list.innerHTML=anns.map(a=>`
+    <div class="ann-item${a.id===selAnnId?' active':''}" data-id="${a.id}" onclick="pickAnn('${a.id}')">
+      <div class="ann-dot" style="background:${TC[a.type]}"></div>
+      <div class="ann-item-body">
+        <div class="ann-item-lbl">${e(a.label)}</div>
+        <div class="ann-item-txt">${e(a.text.length>44?a.text.slice(0,44)+'…':a.text)}</div>
+        ${a.notes?`<div class="ann-item-note">${e(a.notes)}</div>`:''}
+        <div style="font-size:9.5px;color:#4a3a28;margin-top:2px;font-family:'DM Mono',monospace">${TL[a.type]}</div>
+      </div>
+      <div class="ann-item-actions">
+        <button class="aib edit" onclick="editAnn('${a.id}',event)" title="Szerkesztés">✎</button>
+        <button class="aib del" onclick="delAnn('${a.id}',event)" title="Törlés">×</button>
+      </div>
+    </div>`).join('');
+}
+function pickAnn(id){
+  selAnnId=id; renderText();
+  document.querySelectorAll('.ann-item').forEach(el=>el.classList.toggle('active',el.dataset.id===id));
+  document.querySelector(`.ann-item[data-id="${id}"]`)?.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function delAnn(id,ev){
+  ev.stopPropagation();
+  if(!confirm('Biztosan törlöd ezt az annotációt?')) return;
+  const doc=getDoc(); if(!doc) return;
+  doc.annotations=doc.annotations.filter(a=>a.id!==id);
+  if(selAnnId===id) selAnnId=null;
+  renderText(); renderSb();
+}
+function editAnn(id,ev){
+  ev.stopPropagation();
+  const doc=getDoc(); if(!doc) return;
+  const a=doc.annotations.find(x=>x.id===id); if(!a) return;
+  editId=id; pendSel=null; pendType=a.type;
+  document.getElementById('pp-title').textContent='Annotáció szerkesztése';
+  document.getElementById('pp-badge').style.display='inline';
+  document.getElementById('pp-save-btn').textContent='Frissítés';
+  document.getElementById('pp-sel').textContent=`"${a.text.length>54?a.text.slice(0,54)+'…':a.text}"`;
+  document.getElementById('pp-label').value=a.label;
+  document.getElementById('pp-notes').value=a.notes||'';
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('sel-type'));
+  document.querySelector(`.tb-${a.type}`)?.classList.add('sel-type');
+  const span=document.querySelector(`.ann-span[data-id="${id}"]`);
+  if(span){ const r=span.getBoundingClientRect(); showPopup(r.left,r.bottom+6); }
+  else showPopup(window.innerWidth/2-146,window.innerHeight/2-160);
+  pickAnn(id);
+}
+function toggleFilter(t,el){
+  if(activeF.has(t)){activeF.delete(t);el.classList.remove('on');}else{activeF.add(t);el.classList.add('on');}
+  renderText(); renderSb();
+}
+
+// ── Selection ──
+document.getElementById('doc-text').addEventListener('mouseup',()=>{
+  setTimeout(()=>{
+    if(editId) return;
+    const sel=window.getSelection();
+    if(!sel||sel.rangeCount===0) return;
+    const range=sel.getRangeAt(0);
+    const txt=sel.toString().trim();
+    if(!txt||txt.length<2) return;
+    const ct=document.getElementById('doc-text');
+    if(!ct.contains(range.startContainer)) return;
+    const s=getOff(ct,range.startContainer,range.startOffset);
+    const en=getOff(ct,range.endContainer,range.endOffset);
+    if(s>=en) return;
+    const doc=getDoc(); if(!doc) return;
+    if((doc.annotations||[]).some(a=>!(en<=a.start||s>=a.end))){ toast('Ez a rész már annotálva van.'); sel.removeAllRanges(); return; }
+    pendSel={s,e:en,text:doc.text.slice(s,en)};
+    pendType=null; editId=null;
+    document.getElementById('pp-title').textContent='Új annotáció';
+    document.getElementById('pp-badge').style.display='none';
+    document.getElementById('pp-save-btn').textContent='Mentés';
+    document.getElementById('pp-label').value='';
+    document.getElementById('pp-notes').value='';
+    document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('sel-type'));
+    document.getElementById('pp-sel').textContent=`"${txt.length>54?txt.slice(0,54)+'…':txt}"`;
+    const r=range.getBoundingClientRect();
+    showPopup(r.left,r.bottom+6);
+    sel.removeAllRanges();
+  },10);
+});
+function showPopup(x,y){
+  const p=document.getElementById('ann-popup'); p.classList.add('visible');
+  const pw=292,ph=330;
+  let px=Math.min(x,window.innerWidth-pw-8), py=y;
+  if(py+ph>window.innerHeight-8) py=y-ph-40;
+  px=Math.max(6,px); py=Math.max(6,py);
+  p.style.left=px+'px'; p.style.top=py+'px';
+  setTimeout(()=>document.getElementById('pp-label').focus(),40);
+}
+function closePopup(){ document.getElementById('ann-popup').classList.remove('visible'); pendSel=null; pendType=null; editId=null; }
+function selType(t,btn){ pendType=t; document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('sel-type')); btn.classList.add('sel-type'); const l=document.getElementById('pp-label'); if(!l.value&&pendSel) l.value=pendSel.text; l.focus(); }
+function saveAnn(){
+  const label=document.getElementById('pp-label').value.trim();
+  if(!pendType){ toast('Válaszd ki a típust!'); return; }
+  if(!label){ toast('Add meg az azonosító nevet!'); document.getElementById('pp-label').focus(); return; }
+  const notes=document.getElementById('pp-notes').value.trim();
+  const doc=getDoc(); if(!doc) return;
+  if(editId){
+    const a=doc.annotations.find(x=>x.id===editId);
+    if(a){ a.type=pendType; a.label=label; a.notes=notes; }
+    editId=null;
+  } else {
+    if(!pendSel) return closePopup();
+    doc.annotations.push({id:mkId(),start:pendSel.s,end:pendSel.e,text:pendSel.text,type:pendType,label,notes});
+    doc.annotations.sort((a,b)=>a.start-b.start);
+  }
+  closePopup(); renderText(); renderSb();
+}
+document.addEventListener('mousedown',ev=>{
+  const p=document.getElementById('ann-popup');
+  if(p.classList.contains('visible')&&!p.contains(ev.target)&&!ev.target.closest('.ann-span')&&!ev.target.closest('.aib')) closePopup();
+});
+
+// ════════════ NETWORK ════════════
+function renderNetFilters(){
+  if(netDocF.size===0) docs.forEach(d=>netDocF.add(d.id));
+  document.getElementById('doc-filter-list').innerHTML=docs.map((d,i)=>`
+    <label class="doc-filter-item"><input type="checkbox" class="doc-cb" ${netDocF.has(d.id)?'checked':''} onchange="toggleDocF('${d.id}',this.checked)">
+    <div class="doc-color-dot" style="background:${DC[i%DC.length]}"></div>
+    <span class="doc-filter-label">${e(d.title)}</span></label>`).join('');
+  document.getElementById('net-type-filter').innerHTML=Object.entries(TL).map(([t,l])=>
+    `<div class="type-chip chip-${t} ${netTypeF.has(t)?'on':''}" onclick="toggleNetT('${t}',this)">${l}</div>`
+  ).join('');
+}
+function toggleDocF(id,on){ if(on) netDocF.add(id); else netDocF.delete(id); refreshNetwork(); }
+function toggleNetT(t,el){ if(netTypeF.has(t)){netTypeF.delete(t);el.classList.remove('on');}else{netTypeF.add(t);el.classList.add('on');} refreshNetwork(); }
+function buildGraph(){
+  const ad=docs.filter(d=>netDocF.has(d.id));
+  const all=ad.flatMap(d=>(d.annotations||[]).filter(a=>netTypeF.has(a.type)).map(a=>({...a,docId:d.id})));
+  const nm={};
+  all.forEach(a=>{ const k=a.label.trim().toLowerCase(); if(!nm[k]) nm[k]={id:k,label:a.label,type:a.type,docs:new Set(),anns:[]}; nm[k].docs.add(a.docId); nm[k].anns.push(a); });
+  const nodes=Object.values(nm);
+  const em={};
+  ad.forEach(doc=>{
+    const keys=[...new Set((doc.annotations||[]).filter(a=>netTypeF.has(a.type)).map(a=>a.label.trim().toLowerCase()))];
+    for(let i=0;i<keys.length;i++) for(let j=i+1;j<keys.length;j++){
+      const ek=[keys[i],keys[j]].sort().join('|||');
+      if(!em[ek]) em[ek]={source:keys[i],target:keys[j],docs:new Set(),weight:0};
+      em[ek].docs.add(doc.id); em[ek].weight++;
+    }
+  });
+  const edges=Object.values(em).filter(x=>nm[x.source]&&nm[x.target]);
+  nodes.forEach(n=>n.docs=[...n.docs]);
+  edges.forEach(x=>x.crossDoc=x.docs.size>1);
+  return {nodes,edges};
+}
+function refreshNetwork(){
+  const {nodes,edges}=buildGraph();
+  document.getElementById('net-empty').style.display=nodes.length?'none':'flex';
+  if(!nodes.length) return;
+  document.getElementById('net-stat').innerHTML=`<strong>Csúcsok:</strong> ${nodes.length}<br><strong>Élek:</strong> ${edges.length}<br><strong>Dok.:</strong> ${netDocF.size}`;
+  drawNet(nodes,edges);
+}
+let netZoom=null, netSvgSel=null;
+function netZoomIn(){ if(netZoom&&netSvgSel) netSvgSel.transition().duration(300).call(netZoom.scaleBy,1.4); }
+function netZoomOut(){ if(netZoom&&netSvgSel) netSvgSel.transition().duration(300).call(netZoom.scaleBy,0.7); }
+function netZoomFit(){
+  if(!netZoom||!netSvgSel) return;
+  const cv=document.getElementById('net-canvas');
+  netSvgSel.transition().duration(500).call(netZoom.transform, d3.zoomIdentity.translate(cv.clientWidth/2,cv.clientHeight/2).scale(1));
+}
+
+function drawNet(nodes,edges){
+  const cv=document.getElementById('net-canvas'),W=cv.clientWidth,H=cv.clientHeight;
+  const svg=d3.select('#net-svg'); svg.selectAll('*').remove();
+  netSvgSel=svg;
+  if(sim) sim.stop();
+  const g=svg.append('g');
+  netZoom=d3.zoom().scaleExtent([.08,6]).on('zoom',ev=>g.attr('transform',ev.transform));
+  svg.call(netZoom);
+  // initial transform: centered
+  svg.call(netZoom.transform, d3.zoomIdentity.translate(W/2,H/2));
+
+  const r=d=>Math.max(14, Math.sqrt(d.anns.length)*5+10);
+
+  const link=g.append('g').selectAll('line').data(edges).join('line')
+    .attr('stroke',d=>d.crossDoc?'#5a80b0':'#8a6040')
+    .attr('stroke-dasharray',d=>d.crossDoc?'6,3':'none')
+    .attr('stroke-width',d=>Math.sqrt(d.weight)*1.8+1)
+    .attr('stroke-opacity',.65)
+    .style('cursor','pointer')
+    .on('mouseover',(ev,d)=>showEdgeTip(ev,d))
+    .on('mouseout',()=>document.getElementById('edge-tooltip').classList.remove('visible'));
+
+  const ng=g.append('g').selectAll('g').data(nodes).join('g').style('cursor','pointer')
+    .call(d3.drag()
+      .on('start',(ev,d)=>{if(!ev.active)sim.alphaTarget(.3).restart();d.fx=d.x;d.fy=d.y;})
+      .on('drag',(ev,d)=>{d.fx=ev.x;d.fy=ev.y;})
+      .on('end',(ev,d)=>{if(!ev.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}))
+    .on('click',(ev,d)=>{ev.stopPropagation();showNodePanel(d);})
+    .on('mouseover',(ev,d)=>showNetTip(ev,d))
+    .on('mouseout',()=>document.getElementById('net-tooltip').classList.remove('visible'));
+
+  // outer glow for cross-doc nodes
+  ng.filter(d=>d.docs.length>1).append('circle')
+    .attr('r',d=>r(d)+7).attr('fill','none')
+    .attr('stroke',d=>TC[d.type]).attr('stroke-opacity',.22).attr('stroke-width',3);
+
+  ng.append('circle').attr('r',r)
+    .attr('fill',d=>TC[d.type]).attr('fill-opacity',.85)
+    .attr('stroke',d=>d.docs.length>1?'#f0e8d8':'rgba(255,255,255,.2)')
+    .attr('stroke-width',d=>d.docs.length>1?2:1);
+
+  // Label: inside node if fits, else below
+  ng.append('text')
+    .text(d=>{ const lbl=d.label; return lbl.length>16?lbl.slice(0,14)+'…':lbl; })
+    .attr('text-anchor','middle')
+    .attr('dy','0.35em')
+    .attr('font-size',d=>r(d)>18?11:9)
+    .attr('font-family','Outfit,sans-serif')
+    .attr('font-weight','500')
+    .attr('fill',d=>r(d)>18?'#f0e8d8':'transparent') // inside big nodes
+    .attr('pointer-events','none');
+
+  // External label below node (always shown)
+  ng.append('text')
+    .text(d=>{ const lbl=d.label; return lbl.length>20?lbl.slice(0,18)+'…':lbl; })
+    .attr('text-anchor','middle')
+    .attr('dy',d=>r(d)+14)
+    .attr('font-size',10.5)
+    .attr('font-family','Outfit,sans-serif')
+    .attr('font-weight','500')
+    .attr('fill','#c8b89a')
+    .attr('pointer-events','none')
+    .each(function(d){ // add subtle shadow/outline for readability
+      d3.select(this).clone(true).lower()
+        .attr('stroke','#16120d').attr('stroke-width',3).attr('stroke-linejoin','round').attr('fill','none');
+    });
+
+  sim=d3.forceSimulation(nodes)
+    .force('link',d3.forceLink(edges).id(d=>d.id).distance(d=>120+d.weight*12).strength(.5))
+    .force('charge',d3.forceManyBody().strength(-550).distanceMax(500))
+    .force('center',d3.forceCenter(0,0))
+    .force('collision',d3.forceCollide().radius(d=>r(d)+30))
+    .force('x',d3.forceX(0).strength(.04))
+    .force('y',d3.forceY(0).strength(.04))
+    .alphaDecay(.02)
+    .on('tick',()=>{
+      link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
+          .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+      ng.attr('transform',d=>`translate(${d.x},${d.y})`);
+    })
+    .on('end',()=>{ netZoomFit(); }); // auto-fit when simulation settles
+
+  svg.on('click',()=>document.getElementById('node-info-panel').classList.remove('visible'));
+}
+function showNetTip(ev,d){
+  const tt=document.getElementById('net-tooltip');
+  const dTags=d.docs.map(id=>{ const doc=docs.find(x=>x.id===id); return doc?`<span class="ntt-doc-tag">${e(doc.title.slice(0,26)+(doc.title.length>26?'…':''))}</span>`:''; }).join('');
+  tt.innerHTML=`<div class="ntt-head"><div class="ntt-type" style="color:${TC[d.type]}">${TL[d.type]}</div><div class="ntt-name">${e(d.label)}</div></div><div class="ntt-body">${d.anns.length} előfordulás${d.docs.length>1?` · <strong style="color:#c0b09a">${d.docs.length} dok.</strong>`:''}<div class="ntt-docs">${dTags}</div></div>`;
+  const cv=document.getElementById('net-canvas').getBoundingClientRect();
+  let x=ev.clientX-cv.left+12,y=ev.clientY-cv.top+12;
+  if(x+225>cv.width) x=ev.clientX-cv.left-232;
+  tt.style.left=x+'px'; tt.style.top=y+'px'; tt.classList.add('visible');
+}
+function showEdgeTip(ev,d){
+  const et=document.getElementById('edge-tooltip');
+  et.innerHTML=`<strong>${e(d.source.label||d.source)}</strong> ↔ <strong>${e(d.target.label||d.target)}</strong><br><span style="font-size:10px;color:#6a5a48">${d.crossDoc?'Keresztdokumentum':'Dokumentumon belüli'} · súly: ${d.weight}</span>`;
+  const cv=document.getElementById('net-canvas').getBoundingClientRect();
+  et.style.left=(ev.clientX-cv.left+10)+'px'; et.style.top=(ev.clientY-cv.top+10)+'px'; et.classList.add('visible');
+}
+function showNodePanel(d){
+  const p=document.getElementById('node-info-panel');
+  const dI=d.docs.map(id=>{ const doc=docs.find(x=>x.id===id); return doc?`<span style="font-size:10px;color:#6a5a48">📄 ${e(doc.title)}</span>`:''; }).join('<br>');
+  const aL=d.anns.slice(0,5).map(a=>{ const doc=docs.find(x=>x.id===a.docId); return `<div class="nip-ann" style="border-color:${TC[a.type]}"><div class="nip-ann-txt">"${e(a.text.length>38?a.text.slice(0,38)+'…':a.text)}"</div>${a.notes?`<div style="font-size:10px;color:#5a4a38">${e(a.notes)}</div>`:''}${doc?`<div class="nip-ann-doc">📄 ${e(doc.title.slice(0,34))}</div>`:''}</div>`; }).join('');
+  p.innerHTML=`<div class="nip-head"><div><div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:${TC[d.type]};margin-bottom:2px">${TL[d.type]}</div><div class="nip-name">${e(d.label)}</div></div><button class="nip-close" onclick="document.getElementById('node-info-panel').classList.remove('visible')">✕</button></div><div class="nip-body">${d.docs.length} dok. · ${d.anns.length} előfordulás<br>${dI}<div class="nip-ann-list">${aL}${d.anns.length>5?`<div style="font-size:10px;color:#4a3a28;margin-top:4px">+${d.anns.length-5} további…</div>`:''}</div></div>`;
+  p.classList.add('visible');
+}
+
+// ════════════ EXPORT ════════════
+function showExport(fmt){
+  const ov=document.getElementById('exp-overlay'),fn=document.getElementById('exp-fn'),body=document.getElementById('exp-body');
+  if(fmt==='json'){
+    fn.textContent='annotations.json';
+    body.innerHTML=sjHl(JSON.stringify({documents:docs.map(d=>({id:d.id,title:d.title,date:d.date,ref:d.ref,annotations:(d.annotations||[]).map(a=>({id:a.id,type:a.type,label:a.label,text:a.text,start:a.start,end:a.end,notes:a.notes||null,teiTag:TT[a.type]}))}))},'',null,2));
+  } else {
+    const doc=getDoc(); if(!doc){ toast('Válassz dokumentumot az annotáló nézetben!'); return; }
+    fn.textContent='document.xml'; body.innerHTML=buildTEI(doc);
+  }
+  ov.classList.add('visible');
+}
+function closeExp(ev){ if(!ev||ev.target===document.getElementById('exp-overlay')) document.getElementById('exp-overlay').classList.remove('visible'); }
+function buildTEI(doc){
+  const sorted=[...(doc.annotations||[])].sort((a,b)=>a.start-b.start);
+  let th='',pos=0;
+  for(const a of sorted){
+    if(a.start<pos) continue;
+    th+=ex(doc.text.slice(pos,a.start));
+    const tag=TT[a.type],ref=` ref="#${a.label.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'')}"`,note=a.notes?` n="${a.notes.replace(/"/g,"'")}"`:'';
+    th+=`&lt;<span class="t-tag">${tag}</span>${ref}${note}&gt;${ex(doc.text.slice(a.start,a.end))}&lt;/<span class="t-tag">${tag}</span>&gt;`;
+    pos=a.end;
+  }
+  th+=ex(doc.text.slice(pos));
+  th=th.split('\n\n').map(p=>`\n        ${p}`).join('');
+  const ps=sorted.filter(a=>a.type==='person'),os=sorted.filter(a=>a.type==='org'),pl=sorted.filter(a=>a.type==='place');
+  function mkL(items,outer,inner,idT){
+    if(!items.length) return '';
+    const seen=new Set(); let out=`\n      &lt;<span class="t-tag">${outer}</span>&gt;`;
+    items.forEach(a=>{ const id=a.label.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''); if(seen.has(id)) return; seen.add(id);
+      out+=`\n        &lt;<span class="t-tag">${idT}</span> <span class="t-attr">xml:id</span>=<span class="t-val">"${id}"</span>&gt;\n          &lt;<span class="t-tag">${inner}</span>&gt;${ex(a.label)}&lt;/<span class="t-tag">${inner}</span>&gt;${a.notes?`\n          &lt;<span class="t-tag">note</span>&gt;${ex(a.notes)}&lt;/<span class="t-tag">note</span>&gt;`:''}\n        &lt;/<span class="t-tag">${idT}</span>&gt;`;
+    });
+    return out+`\n      &lt;/<span class="t-tag">${outer}</span>&gt;`;
+  }
+  return `<span class="t-pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="t-comm">&lt;!-- TEI-P5 · ELTE BTK · ${new Date().toISOString().slice(0,10)} --&gt;</span>
+
+&lt;<span class="t-tag">TEI</span> <span class="t-attr">xmlns</span>=<span class="t-val">"http://www.tei-c.org/ns/1.0"</span>&gt;
+  &lt;<span class="t-tag">teiHeader</span>&gt;
+    &lt;<span class="t-tag">fileDesc</span>&gt;
+      &lt;<span class="t-tag">titleStmt</span>&gt;&lt;<span class="t-tag">title</span>&gt;${ex(doc.title)}&lt;/<span class="t-tag">title</span>&gt;&lt;/<span class="t-tag">titleStmt</span>&gt;
+      &lt;<span class="t-tag">publicationStmt</span>&gt;&lt;<span class="t-tag">p</span>&gt;Kézirat&lt;/<span class="t-tag">p</span>&gt;&lt;/<span class="t-tag">publicationStmt</span>&gt;
+      &lt;<span class="t-tag">sourceDesc</span>&gt;&lt;<span class="t-tag">msDesc</span>&gt;&lt;<span class="t-tag">msIdentifier</span>&gt;&lt;<span class="t-tag">idno</span>&gt;${ex(doc.ref)}&lt;/<span class="t-tag">idno</span>&gt;&lt;/<span class="t-tag">msIdentifier</span>&gt;&lt;/<span class="t-tag">msDesc</span>&gt;&lt;/<span class="t-tag">sourceDesc</span>&gt;
+    &lt;/<span class="t-tag">fileDesc</span>&gt;
+    &lt;<span class="t-tag">profileDesc</span>&gt;&lt;<span class="t-tag">particDesc</span>&gt;${mkL(ps,'listPerson','persName','person')}${mkL(os,'listOrg','orgName','org')}${mkL(pl,'listPlace','placeName','place')}
+    &lt;/<span class="t-tag">particDesc</span>&gt;&lt;/<span class="t-tag">profileDesc</span>&gt;
+  &lt;/<span class="t-tag">teiHeader</span>&gt;
+  &lt;<span class="t-tag">text</span>&gt;&lt;<span class="t-tag">body</span>&gt;&lt;<span class="t-tag">div</span> <span class="t-attr">type</span>=<span class="t-val">"letter"</span>&gt;${th}
+  &lt;/<span class="t-tag">div</span>&gt;&lt;/<span class="t-tag">body</span>&gt;&lt;/<span class="t-tag">text</span>&gt;
+&lt;/<span class="t-tag">TEI</span>&gt;`;
+}
+
+// ════════════ UTILS ════════════
+function e(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function ea(s){ return (s||'').replace(/"/g,'&quot;'); }
+function ex(s){ return e(s||''); }
+function sjHl(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,m=>{
+      let c='color:#a5d6ff';
+      if(/^"/.test(m)) c=/:$/.test(m)?'color:#ffa657':'color:#a5d6ff';
+      else if(/true|false/.test(m)) c='color:#79c0ff';
+      else if(/null/.test(m)) c='color:#8b949e';
+      return `<span style="${c}">${m}</span>`;
+    });
+}
+function toast(msg){
+  let t=document.getElementById('_t');
+  if(!t){t=document.createElement('div');t.id='_t';t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1510;color:#f0e8d8;padding:9px 18px;border-radius:4px;font-size:12.5px;z-index:9999;border-left:3px solid var(--accent);box-shadow:0 4px 14px rgba(0,0,0,.4);font-family:Outfit,sans-serif;transition:opacity .3s';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';clearTimeout(t._t);t._t=setTimeout(()=>t.style.opacity='0',2400);
+}
+
+// ════════════ PERSISTENCE ════════════
+const LS_KEY = 'tei_annotalo_v1';
+
+function persistSave(){
+  try{
+    const payload = docs.map(d=>({
+      id:d.id, title:d.title, date:d.date, ref:d.ref,
+      text:d.text, annotations:d.annotations||[]
+    }));
+    localStorage.setItem(LS_KEY, JSON.stringify(payload));
+    flashSaved();
+  } catch(err){ console.warn('localStorage save failed:', err); }
+}
+
+function flashSaved(){
+  const ind = document.getElementById('save-indicator');
+  if(!ind) return;
+  ind.style.display='inline'; ind.style.color='#80b060';
+  clearTimeout(ind._t);
+  ind._t = setTimeout(()=>{ ind.style.color='#3a4a2a'; setTimeout(()=>{ ind.style.display='none'; },600); }, 1800);
+}
+
+function persistLoad(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return false;
+    const saved = JSON.parse(raw);
+    if(!Array.isArray(saved)||saved.length===0) return false;
+    saved.forEach(s=>{
+      const ex = docs.find(d=>d.id===s.id);
+      if(ex){
+        ex.title=s.title; ex.date=s.date; ex.ref=s.ref;
+        ex.annotations = s.annotations||[];
+      } else {
+        docs.push(s);
+      }
+    });
+    return true;
+  } catch(err){ console.warn('localStorage load failed:', err); return false; }
+}
+
+// Hook persistSave into all state-changing operations
+const _origSaveAnn = saveAnn;
+saveAnn = function(){ _origSaveAnn(); persistSave(); };
+const _origDelAnn = delAnn;
+delAnn = function(id,ev){ _origDelAnn(id,ev); persistSave(); };
+const _origSaveDocModal = saveDocModal;
+saveDocModal = function(){ _origSaveDocModal(); persistSave(); };
+const _origDelDoc = delDoc;
+delDoc = function(id){ _origDelDoc(id); persistSave(); };
+
+// ── Save as self-contained HTML ──
+function saveAsHtml(){
+  const docsJson = JSON.stringify(docs.map(d=>({
+    id:d.id, title:d.title, date:d.date, ref:d.ref,
+    text:d.text, annotations:d.annotations||[]
+  })), null, 2);
+
+  let src = document.documentElement.outerHTML;
+
+  const startMarker = '\/\/ \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 DEMO DATA \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550';
+  const endMarker   = '\/\/ \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 DEMO DATA END \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550';
+
+  let out;
+  if(src.includes(endMarker)){
+    const s = src.indexOf(startMarker);
+    const endIdx = src.indexOf(endMarker) + endMarker.length;
+    out = src.slice(0,s)
+        + startMarker + '\nconst DEMO=' + docsJson + ';\n'
+        + endMarker
+        + src.slice(endIdx);
+  } else {
+    // First save: find DEMO array and wrap it
+    const demoStart = src.indexOf('const DEMO=[');
+    if(demoStart===-1){ toast('Nem sikerült megtalálni a DEMO tömböt.'); return; }
+    // Walk brackets to find end of array
+    let depth=0, i=demoStart + 'const DEMO='.length;
+    while(i<src.length){
+      if(src[i]==='[') depth++;
+      else if(src[i]===']'){ depth--; if(depth===0){ i++; break; } }
+      i++;
+    }
+    if(src[i]===';') i++;
+    out = src.slice(0,demoStart)
+        + startMarker + '\nconst DEMO=' + docsJson + ';\n'
+        + endMarker
+        + src.slice(i);
+  }
+
+  const blob = new Blob([out], {type:'text/html;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'), {href:url, download:'tei_annotalo_mentett.html'});
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('✓ HTML letöltve – az annotációk bele vannak égetve.');
+}
+
+// ── Init: load saved state then render ──
+const hadSaved = persistLoad();
+renderGrid();
+if(hadSaved) toast('✓ Mentett állapot visszatöltve.');
+</script><div id="_t" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgb(26, 21, 16); color: rgb(240, 232, 216); padding: 9px 18px; border-radius: 4px; font-size: 12.5px; z-index: 9999; border-left: 3px solid var(--accent); box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 14px; font-family: Outfit, sans-serif; transition: opacity 0.3s; opacity: 0;">✓ Mentett állapot visszatöltve.</div><div id="_t" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgb(26, 21, 16); color: rgb(240, 232, 216); padding: 9px 18px; border-radius: 4px; font-size: 12.5px; z-index: 9999; border-left: 3px solid var(--accent); box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 14px; font-family: Outfit, sans-serif; transition: opacity 0.3s; opacity: 0;">✓ Mentett állapot visszatöltve.</div>
+
+
+</body></html>

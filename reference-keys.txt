@@ -1,3 +1,4 @@
+előszó
 adat-a-történettudományban
 bevezetés
 digitális-forrásgyűjtemények-magyarországon
@@ -29,10 +30,16 @@ week2
 week2-intro
 week2-topics
 week2-readings
-week3
-week3-intro
-week3-topics
-week3-readings
+digitalis-forraskiadas
+forraskiadas-bevezetes
+adatbazis-nem-forraskiadas
+internetes-kozzetevel
+tei-szabvany
+ocr-htr
+hazai-gyakorlatok
+forraskiadas-osszegzes
+forraskiadas-irodalom
+annotator-eszkoz
 week4
 week4-intro
 week4-topics
