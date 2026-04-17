@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7 Forrásban lévő adat II - Vizualizáció | adat_tortenettudomanyban.knit</title>
+  <title>10 Esettanulmány: Az MDP hatásköri lista prozopográfiai elemzése (1955) | adat_tortenettudomanyban.knit</title>
   <meta name="description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7 Forrásban lévő adat II - Vizualizáció | adat_tortenettudomanyban.knit" />
+  <meta property="og:title" content="10 Esettanulmány: Az MDP hatásköri lista prozopográfiai elemzése (1955) | adat_tortenettudomanyban.knit" />
   <meta property="og:type" content="book" />
   <meta property="og:image" content="/images/cover.jpg" />
   <meta property="og:description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7 Forrásban lévő adat II - Vizualizáció | adat_tortenettudomanyban.knit" />
+  <meta name="twitter:title" content="10 Esettanulmány: Az MDP hatásköri lista prozopográfiai elemzése (1955) | adat_tortenettudomanyban.knit" />
   
   <meta name="twitter:description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   <meta name="twitter:image" content="/images/cover.jpg" />
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="week4.html"/>
-<link rel="next" href="week6.html"/>
+<link rel="prev" href="prozo-adatbazis.html"/>
+<link rel="next" href="week7.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -291,27 +291,353 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="week5" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">7</span> Forrásban lévő adat II - Vizualizáció<a href="week5.html#week5" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<p>“Mit mutat, mit rejt el egy vizualizáció?”</p>
-</blockquote>
-<div id="week5-intro" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Bevezetés<a href="week5.html#week5-intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>[Ez a fejezet még készülőben van]</strong></p>
+<div id="prozo-mdp" class="section level1 hasAnchor" number="10">
+<h1><span class="header-section-number">10</span> Esettanulmány: Az MDP hatásköri lista prozopográfiai elemzése (1955)<a href="prozo-mdp.html#prozo-mdp" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="rmdnote">
+<p>Ez az esettanulmány az MDP (Magyar Dolgozók Pártja) 1955-ös hatásköri listáját elemzi prozopográfiai módszerrel. A korpusz 1870 főt tartalmaz, 10 változóval személyenként. A fejezet az adatbázis-építés és a kereszttábla-elemzés gyakorlati lépéseit mutatja be — az előző fejezet (<a href="prozo-adatbazis.html#prozo-adatbazis">9</a>) módszertani keretét egy konkrét forráson alkalmazva.</p>
 </div>
-<div id="week5-topics" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Témák<a href="week5.html#week5-topics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="mdp-forras" class="section level2 hasAnchor" number="10.1">
+<h2><span class="header-section-number">10.1</span> A forrás és a kutatási kérdés<a href="prozo-mdp.html#mdp-forras" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A hatásköri lista az MDP apparátusának 1870 neves adatbázisa: minden személy neve, pozíciója, születési éve, párttagsági adatai, pártiskolai végzettsége és eredeti foglalkozása rögzített. Az adatbázis 492 archív életrajzi fotót is tartalmaz — kézzel írt vagy gépelt életrajzi lapokat, amelyek gazdagabb, nem strukturált információt hordoznak (apa foglalkozása, iskolai végzettség, származás).</p>
+<p>A központi kutatási kérdés: <strong>Milyen társadalmi mobilitási csatornákat nyitott meg a párt a káderei számára?</strong></p>
+<div id="mdp-szamok" class="section level3 hasAnchor" number="10.1.1">
+<h3><span class="header-section-number">10.1.1</span> A korpusz számokban<a href="prozo-mdp.html#mdp-szamok" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Jellemző</th>
+<th align="left">Érték</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Személyek száma</td>
+<td align="left">1 870</td>
+</tr>
+<tr class="even">
+<td align="left">Ebből nő</td>
+<td align="left">202 (10,8%)</td>
+</tr>
+<tr class="odd">
+<td align="left">Változók személyenként</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">Archív életrajz (fotó)</td>
+<td align="left">492 db</td>
+</tr>
+</tbody>
+</table>
+<p>Az Excel-alapadatban rögzített változók: név, pozíció, születési év, MKP-tagság éve, SZDP-tagság éve, pártiskola, eredeti foglalkozás, mióta viseli a pozíciót, forrás, egyéb megjegyzés.</p>
+</div>
+</div>
+<div id="mdp-adatforrasok" class="section level2 hasAnchor" number="10.2">
+<h2><span class="header-section-number">10.2</span> Az adatforrások rendszere<a href="prozo-mdp.html#mdp-adatforrasok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A prozopográfiai elemzés itt három rétegű forrásrendszerre épül:</p>
+<p><strong>Strukturált adattábla (Excel):</strong> A hatásköri lista 1870 neves adatbázisa, 10 változóval. Előnye, hogy azonnal elemezhető — hátránya, hogy számos változó hiányos.</p>
+<p><strong>Archív életrajzi lapok:</strong> 492 db kézzel írt/gépelt életrajzi fotó, amelyek gazdag, de nem strukturált információt tartalmaznak. Hagyományos OCR nehezen kezeli őket; multimodális AI-olvasás és manuális feldolgozás szükséges. 35 személy került teljes feldolgozásra mintaként.</p>
+<p><strong>Másodlagos szakirodalom:</strong> Korábban publikált elemzések a témáról, amelyek validálásra és kiegészítésre használhatók.</p>
+<div class="rmdnote">
+<p><strong>Gyakorlati tanács:</strong> Mindig keressünk több forrástípust! A strukturált és nem strukturált adatok <em>együtt</em> adják a teljes képet. Ez az elv az előző fejezetben tárgyalt ElitData projektnél is érvényesült.</p>
+</div>
+</div>
+<div id="mdp-tisztitas" class="section level2 hasAnchor" number="10.3">
+<h2><span class="header-section-number">10.3</span> Adattisztítás és standardizálás<a href="prozo-mdp.html#mdp-tisztitas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A legidőigényesebb, de legfontosabb fázis. A tipikus problémák és megoldások:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Probléma</th>
+<th align="left">Megoldás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Hiányzó adatok (n.a., üres cellák)</td>
+<td align="left">Hiányzó adatok jelölése: külön kategória („Ismeretlen”)</td>
+</tr>
+<tr class="even">
+<td align="left">Nem egységes írásmód („munkásnő” vs. „munkás”)</td>
+<td align="left">Egységesítő tábla (lookup): pl. „vasésztergályos” → Ipari szak.</td>
+</tr>
+<tr class="odd">
+<td align="left">Születési év formátumok (1920 vs. „1920.”)</td>
+<td align="left">Numerikus konverzió: születési év → int</td>
+</tr>
+<tr class="even">
+<td align="left">Több pozíció egy cellában</td>
+<td align="left">Átírások, rövidítések feloldása</td>
+</tr>
+</tbody>
+</table>
+<p>A duplikáció-szűrés név + születési év alapján történik. Validálási scriptek futtatása automatikus ellenőrzést biztosít.</p>
+</div>
+<div id="mdp-valtozok" class="section level2 hasAnchor" number="10.4">
+<h2><span class="header-section-number">10.4</span> Változók és kategorizálás<a href="prozo-mdp.html#mdp-valtozok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A prozopográfiai elemzés építőkövei a jól definiált kategóriák. Az alábbi tábla a fő változókat mutatja:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Változó</th>
+<th align="left">Típus</th>
+<th align="left">Kategóriák</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Társadalmi réteg</td>
+<td align="left">Kategorikus (8)</td>
+<td align="left">Ipari szakmunkás, Értelmiségi, Segéd-/betanított munkás, Tisztviselő, Mezőgazdasági, Szabadfoglalkozású, Kereskedő, Ismeretlen</td>
+</tr>
+<tr class="even">
+<td align="left">Pozíció hierarchia</td>
+<td align="left">Ordinális (5)</td>
+<td align="left">Felső vezetés, Középvezetés, Alsó-középvezetés, Politikai munkatárs, Egyéb</td>
+</tr>
+<tr class="odd">
+<td align="left">Pártiskola szint</td>
+<td align="left">Ordinális (0–7)</td>
+<td align="left">0=nincs → 7=Szovjetunióban végzett</td>
+</tr>
+<tr class="even">
+<td align="left">Párttagság időszaka</td>
+<td align="left">Ordinális (4)</td>
+<td align="left">Illegális korszak, 1945, Koalíciós időszak, 1949 után</td>
+</tr>
+<tr class="odd">
+<td align="left">Korcsoport</td>
+<td align="left">Kategorikus</td>
+<td align="left">22–24, 25–29, 30–34, 35–39, 40–44, 45–49, 50+</td>
+</tr>
+<tr class="even">
+<td align="left">Származás</td>
+<td align="left">Kategorikus</td>
+<td align="left">Munkás, Paraszt, Értelmiségi, Kispolgár, Ismeretlen</td>
+</tr>
+</tbody>
+</table>
+<div class="rmdnote">
+<p><strong>Fontos</strong>: a kategorizálást <em>előre</em> rögzítsük és dokumentáljuk, mielőtt az elemzésbe kezdünk! Utólagos kategória-módosítás az összes korábbi eredményt érvénytelenítheti.</p>
+</div>
+</div>
+<div id="mdp-gazdagitas" class="section level2 hasAnchor" number="10.5">
+<h2><span class="header-section-number">10.5</span> Adatgazdagítás archív forrásokból<a href="prozo-mdp.html#mdp-gazdagitas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az archív életrajzi lapok feldolgozása a strukturált adatbázist olyan változókkal egészíti ki, amelyek az Excel-alapadatból hiányoznak:</p>
 <ul>
-<li>Történeti adatok vizualizálása</li>
-<li>Időbeli változás, összehasonlítás</li>
-<li>Etika: félrevezetés vizualizációval</li>
-<li>Statisztikai adatok tisztítása</li>
+<li><strong>Iskolai végzettség</strong> (formális iskolázottság)</li>
+<li><strong>Apa foglalkozása</strong> → társadalmi réteg</li>
+<li><strong>Származás</strong> megjelölése</li>
+<li><strong>Eredeti foglalkozás</strong> (pártba lépés előtt)</li>
+</ul>
+<p>A 492 fotó olvasása (gépelt/kézírt magyar szöveg) hagyományos OCR-rel nem működik megbízhatóan. Az esettanulmány multimodális LLM-alapú olvasást alkalmaz, kézi ellenőrzéssel.</p>
+<p><strong>Kihívások:</strong></p>
+<ul>
+<li>Nem minden fotó olvasható (elforgatott, halvány) → el kell fogadni a hiányosságot</li>
+<li>Az AI-kiolvasás ellenőrzése elengedhetetlen (pl. születési év tévedések)</li>
+<li>A „neves” fotók felülreprezentálják a felső vezetést → mintareprezentativitási torzítás</li>
 </ul>
 </div>
-<div id="week5-readings" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> További olvasnivaló<a href="week5.html#week5-readings" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><em>[Később kiegészítve]</em></p>
+<div id="mdp-kereszttabla" class="section level2 hasAnchor" number="10.6">
+<h2><span class="header-section-number">10.6</span> Kereszttábla-elemzés<a href="prozo-mdp.html#mdp-kereszttabla" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A prozopográfiai elemzés fő módszere a kereszttábla: két kategorikus változó összevetése táblázatban, sor- és oszlopszázalékok számításával.</p>
+<div id="mdp-keresztpelda" class="section level3 hasAnchor" number="10.6.1">
+<h3><span class="header-section-number">10.6.1</span> Példa: Foglalkozás × Pozíció (nők, 25–34 év)<a href="prozo-mdp.html#mdp-keresztpelda" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Középvez.</th>
+<th align="left">Pol. mtárs</th>
+<th align="left">Titkár</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Munkás</td>
+<td align="left">50%</td>
+<td align="left">76,6%</td>
+<td align="left">41,6%</td>
+</tr>
+<tr class="even">
+<td align="left">Értelmiségi</td>
+<td align="left">27,8%</td>
+<td align="left">6,7%</td>
+<td align="left">25%</td>
+</tr>
+<tr class="odd">
+<td align="left">Alkalmazott</td>
+<td align="left">20,4%</td>
+<td align="left">3,3%</td>
+<td align="left">33,3%</td>
+</tr>
+</tbody>
+</table>
+<p>A munkás származásúak felülreprezentáltak a politikai munkatársi pozíciókban — ez jelzi a párt tudatos rekrutációs stratégiáját.</p>
+<p><strong>További vizsgálható kereszttáblák:</strong></p>
+<ul>
+<li>Eredeti foglalkozás × Elért pozíció szint</li>
+<li>Pártiskola végzettség × Pozíció szint</li>
+<li>Korcsoport × Pozíció típusa</li>
+</ul>
+<p><strong>Eszközök:</strong> <code>pandas</code> (Python) <code>crosstab</code>, <code>pivot_table</code> | Excel pivot tábla | SPSS / R</p>
+</div>
+</div>
+<div id="mdp-eredmenyek" class="section level2 hasAnchor" number="10.7">
+<h2><span class="header-section-number">10.7</span> Eredmények: mobilitási minták<a href="prozo-mdp.html#mdp-eredmenyek" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="mdp-noi-megoszlas" class="section level3 hasAnchor" number="10.7.1">
+<h3><span class="header-section-number">10.7.1</span> A női káderek pozíció szerinti megoszlása (N=202)<a href="prozo-mdp.html#mdp-noi-megoszlas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Pozíció</th>
+<th align="left">Nők száma</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Politikai munkatárs</td>
+<td align="left">84</td>
+</tr>
+<tr class="even">
+<td align="left">Középvezető</td>
+<td align="left">54</td>
+</tr>
+<tr class="odd">
+<td align="left">Titkár</td>
+<td align="left">30</td>
+</tr>
+<tr class="even">
+<td align="left">Alsó vezető</td>
+<td align="left">12</td>
+</tr>
+<tr class="odd">
+<td align="left">Felső vezető</td>
+<td align="left">11</td>
+</tr>
+<tr class="even">
+<td align="left">Újságíró</td>
+<td align="left">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="mdp-fo-megallapitasok" class="section level3 hasAnchor" number="10.7.2">
+<h3><span class="header-section-number">10.7.2</span> Fő megállapítások<a href="prozo-mdp.html#mdp-fo-megallapitasok" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><strong>A párt komoly mobilitási csatornát jelentett</strong>: munkás származásúak felsővezetővé válhattak.</li>
+<li><strong>A pártiskola pótolja a formális iskolázottságot</strong>: a politikai munkatársak 72,6%-a végzett pártiskolát.</li>
+<li><strong>A nők a középvezetésig jutottak</strong>: a legfelső vezető testületek (PB, Titkárság) nők nélkül működtek.</li>
+<li><strong>A férj szerepe meghatározó</strong>: a női káderek 35%-ának a férje is pártkarriert futott.</li>
+<li><strong>Intergenerációs mobilitás</strong>: a párt tette lehetővé a szegényparaszti → vezető testületi pályaívet.</li>
+</ol>
+</div>
+</div>
+<div id="mdp-karrierutak" class="section level2 hasAnchor" number="10.8">
+<h2><span class="header-section-number">10.8</span> Karrierútak: életrajzi példák<a href="prozo-mdp.html#mdp-karrierutak" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az adatok mögötti emberi történetek:</p>
+<p><strong>Nagy Józsefné Szarka Jolán:</strong> 6 elemi → szövőnő → pártfőiskolát végzett → Országos Tervhivatal → könnyűipari miniszter (1955). Szegényparaszti származás.</p>
+<p><strong>Varga Ferencné:</strong> 6 elemi, cipőgyári munkásnő → 1949 megyei PB munkatárs → járási PB titkár → Agrártudományi Egyetem hallgató. Munkásszármazás.</p>
+<p><strong>Lakatos Éva:</strong> 4 polgári, vasésztergályos → 1944 illegális mozgalom, deportálás → Szikra szerkesztő → Szabad Ifjúság felelős szerkesztő → pártfőiskola → Szabad Nép rovatvezető.</p>
+<p><strong>Jóboru Magda:</strong> Egyetem, tanár, munkás szülők → 1945 MKP → 1947 pártiskola → 1949 VKM politikai államtitkár → miniszterhelyettes → oktatási miniszter első helyettese.</p>
+</div>
+<div id="mdp-validalas" class="section level2 hasAnchor" number="10.9">
+<h2><span class="header-section-number">10.9</span> Validálás<a href="prozo-mdp.html#mdp-validalas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="mdp-belso" class="section level3 hasAnchor" number="10.9.1">
+<h3><span class="header-section-number">10.9.1</span> Belső validálás<a href="prozo-mdp.html#mdp-belso" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Fotó-minta vs. Excel adat kereszthivatkozás (24/35 egyezés)</li>
+<li>Automatizált név-egyeztetés (pontos + részleges)</li>
+<li>Születési év, pozíció konzisztencia-ellenőrzés</li>
+</ul>
+</div>
+<div id="mdp-kulso" class="section level3 hasAnchor" number="10.9.2">
+<h3><span class="header-section-number">10.9.2</span> Külső validálás<a href="prozo-mdp.html#mdp-kulso" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Összevetés publikált kutatási eredményekkel</li>
+<li>Fotó minta (n=16 nő) vs. teljes állomány (N=202) összehasonlítása</li>
+<li>A minta torzításainak dokumentálása</li>
+</ul>
+<div class="rmdnote">
+<p><strong>A három rétegű validálás elve:</strong> Excel + fotó + publikáció = három forrásból származó ellenőrzés. A diszkrepanciák is informatívak — azt mutatják, hol és miért térnek el a források.</p>
+</div>
+</div>
+</div>
+<div id="mdp-kihivasok" class="section level2 hasAnchor" number="10.10">
+<h2><span class="header-section-number">10.10</span> Módszertani kihívások<a href="prozo-mdp.html#mdp-kihivasok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Adatminőségi kihívások:</strong></p>
+<ul>
+<li>Hiányzó adatok: nem minden változó ismert minden személyre (pl. iskolai végzettség csak 27/202 nőre)</li>
+<li>Egyenetlen forrás-kimerítősség: a neves szereplőkről több adat áll rendelkezésre</li>
+<li>Történeti terminológia: a korabeli kategóriákat mai fogalmakra kell fordítani</li>
+<li>Név-változatok: házasságkötés utáni névváltoztatások, becenevek</li>
+</ul>
+<p><strong>Értelmezési kihívások:</strong></p>
+<ul>
+<li>Minta-reprezentativitás: a fotó-minta nem tükrözi a teljes populációt</li>
+<li>Kauzalitás vs. korreláció: a pártiskola <em>okozza-e</em> a mobilitást, vagy a mobilizálódóban lévők kerülnek be?</li>
+<li>Selection bias: a listán szereplés maga már a szelekciós folyamat eredménye</li>
+<li>A „mobilitási csatorna” mérésének nehézsége: többdimenziós mozgás</li>
+</ul>
+</div>
+<div id="mdp-vs-elitdata" class="section level2 hasAnchor" number="10.11">
+<h2><span class="header-section-number">10.11</span> Az MDP-elemzés és az ElitData összehasonlítása<a href="prozo-mdp.html#mdp-vs-elitdata" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A két esettanulmány különböző korszakokat és társadalmi csoportokat vizsgál, de a prozopográfiai módszer alapstruktúrája azonos:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Szempont</th>
+<th align="left">ElitData (Horthy-kor)</th>
+<th align="left">MDP hatásköri lista (1955)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Csoport</strong></td>
+<td align="left">Tudáselit: tudósok, írók, tanárok</td>
+<td align="left">Pártkáderek: funkcionáriusok, vezetők</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Forrás</strong></td>
+<td align="left">Lexikonok, névsorok, anyakönyvek</td>
+<td align="left">Hatásköri lista, archív életrajzok</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Méret</strong></td>
+<td align="left">~3 900 személy</td>
+<td align="left">1 870 személy</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Adatmodell</strong></td>
+<td align="left">Relációs (PostgreSQL)</td>
+<td align="left">Egyszerű táblázatos (Excel)</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Elemzés</strong></td>
+<td align="left">Hálózat, térkép, statisztika</td>
+<td align="left">Kereszttábla, vizualizáció</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Frontend</strong></td>
+<td align="left">Egyetlen HTML, D3.js</td>
+<td align="left">Excel + interaktív HTML riport</td>
+</tr>
+</tbody>
+</table>
+<p>Mindkét projekt jól mutatja, hogy a prozopográfia módszertani kerete skálázható: egyszerű Excel-alapú elemzéstől a teljes relációs adatbázisig alkalmazható, a kutatási kérdés és az erőforrások függvényében.</p>
 
 </div>
 </div>
@@ -320,8 +646,8 @@
           </div>
         </div>
       </div>
-<a href="week4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="week6.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="prozo-adatbazis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="week7.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

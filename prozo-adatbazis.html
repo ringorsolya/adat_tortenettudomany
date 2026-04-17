@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7 Forrásban lévő adat II - Vizualizáció | adat_tortenettudomanyban.knit</title>
+  <title>9 Prozopográfiai adatbázis építése — lépésről lépésre | adat_tortenettudomanyban.knit</title>
   <meta name="description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7 Forrásban lévő adat II - Vizualizáció | adat_tortenettudomanyban.knit" />
+  <meta property="og:title" content="9 Prozopográfiai adatbázis építése — lépésről lépésre | adat_tortenettudomanyban.knit" />
   <meta property="og:type" content="book" />
   <meta property="og:image" content="/images/cover.jpg" />
   <meta property="og:description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7 Forrásban lévő adat II - Vizualizáció | adat_tortenettudomanyban.knit" />
+  <meta name="twitter:title" content="9 Prozopográfiai adatbázis építése — lépésről lépésre | adat_tortenettudomanyban.knit" />
   
   <meta name="twitter:description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   <meta name="twitter:image" content="/images/cover.jpg" />
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="week4.html"/>
-<link rel="next" href="week6.html"/>
+<link rel="prev" href="week6.html"/>
+<link rel="next" href="prozo-mdp.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -291,27 +291,253 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="week5" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">7</span> Forrásban lévő adat II - Vizualizáció<a href="week5.html#week5" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<p>“Mit mutat, mit rejt el egy vizualizáció?”</p>
-</blockquote>
-<div id="week5-intro" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Bevezetés<a href="week5.html#week5-intro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><strong>[Ez a fejezet még készülőben van]</strong></p>
+<div id="prozo-adatbazis" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">9</span> Prozopográfiai adatbázis építése — lépésről lépésre<a href="prozo-adatbazis.html#prozo-adatbazis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="rmdnote">
+<p>Ez a fejezet az ElitData kutatócsoport („Tudáselit és politika a Horthy-korban”) munkáján keresztül mutatja be a prozopográfiai adatbázis-építés teljes folyamatát. Az esettanulmány a Nemzeti Kutatási, Kiválósági Program (NKKP) keretében készült.</p>
 </div>
-<div id="week5-topics" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Témák<a href="week5.html#week5-topics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="prozo-mikor" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Mikor érdemes adatbázist építeni?<a href="prozo-adatbazis.html#prozo-mikor" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A prozopográfia személyek egy meghatározott csoportjának kollektív biográfiai vizsgálata: nem az egyén életútja, hanem a csoport közös jellemzői, belső struktúrái és kapcsolatrendszere áll a középpontban. Az előző fejezetben az egyházmegyei ösztöndíjasok esettanulmányán láttuk a módszer alkalmazását — most a technikai megvalósítást vesszük részletesebben szemügyre.</p>
+<p>Adatbázis-megközelítés akkor indokolt, ha:</p>
 <ul>
-<li>Történeti adatok vizualizálása</li>
-<li>Időbeli változás, összehasonlítás</li>
-<li>Etika: félrevezetés vizualizációval</li>
-<li>Statisztikai adatok tisztítása</li>
+<li>a vizsgált személyek száma meghaladja a néhány tucatot,</li>
+<li>több, egymáshoz kapcsolódó változóval dolgozunk (foglalkozás, vallás, iskolázottság, kapcsolatok, időpontok),</li>
+<li>ismétlődő lekérdezésekre, szűrésekre és vizualizációra van szükség,</li>
+<li>a kutatócsoport több tagja párhuzamosan dolgozik az adatokon.</li>
 </ul>
 </div>
-<div id="week5-readings" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> További olvasnivaló<a href="week5.html#week5-readings" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p><em>[Később kiegészítve]</em></p>
+<div id="prozo-keret" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> A kutatási keret meghatározása<a href="prozo-adatbazis.html#prozo-keret" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Mielőtt bármilyen adatot gyűjtenénk, három kérdést kell pontosan megválaszolni:</p>
+<p><strong>Kit veszünk fel az adatbázisba?</strong> Az ElitData esetében a Horthy-kori tudáselit: tudósok, írók, tanárok, közszereplők — meghatározott pozíciók, intézményi tagságok vagy publikációs teljesítmény alapján. A határok meghúzása egyszerre módszertani és historiográfiai döntés; dokumentálni kell az elveket.</p>
+<p><strong>Milyen időszakot fedünk le?</strong> Az adatbázis akkor koherens, ha az időhatárok kutatási szempontból indokoltak és következetesen alkalmazottak (pl. születési év, az aktív pályaszakasz, egy konkrét korszak).</p>
+<p><strong>Mik a fő kutatási kérdések?</strong> Ezek határozzák meg, hogy egyáltalán milyen adatokat érdemes összegyűjteni — fölösleges olyan változókat rögzíteni, amelyeket soha nem fogunk elemezni.</p>
+</div>
+<div id="prozo-adatmodell" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Adatmodell tervezése<a href="prozo-adatbazis.html#prozo-adatmodell" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A relációs adatmodell az alapja szinte minden prozopográfiai adatbázisnak. Az ElitData sémájának fő táblái:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Tábla</th>
+<th align="left">Tartalom</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>tbl_Szemelyek</code></td>
+<td align="left">Alapadatok: neve, születési/halálozási év, nem, vallás, elitcsoport-kód</td>
+</tr>
+<tr class="even">
+<td align="left"><code>tbl_Foglalkozasok</code></td>
+<td align="left">Személyenkénti foglalkozások időponttal (egy személynek több sora lehet)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>tbl_Egyetemek</code></td>
+<td align="left">Felsőoktatási intézmények látogatása</td>
+</tr>
+<tr class="even">
+<td align="left"><code>tbl_Kapcsolatok</code></td>
+<td align="left">Személyek közötti relációk típussal (házasság, szülő–gyerek, kolléga)</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>tbl_Vallasok</code></td>
+<td align="left">Feloldó kódtábla (rövid kód → teljes megnevezés)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kulcstervezési döntések:</strong></p>
+<ul>
+<li>Minden személynek egyedi <code>SzemelyID</code> azonosítója van — ez az összes többi tábla idegen kulcsa.</li>
+<li>Az időpontokat érdemes egységesen kódolni (pl. évtized vagy konkrét év), mert a vegyes formátumú dátumok utólag nehezen kezelhetők.</li>
+<li>A kapcsolattípusokat kódtáblában tároljuk, nem szabad szövegként: a „házasság” és a „házastárs” kétféle írásmódja nem ugyanaz a gép szemével.</li>
+</ul>
+</div>
+<div id="prozo-adatgyujtes" class="section level2 hasAnchor" number="9.4">
+<h2><span class="header-section-number">9.4</span> Adatgyűjtés és forráskezelés<a href="prozo-adatbazis.html#prozo-adatgyujtes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A prozopográfiai adatgyűjtés forrásigényes munka. Tipikus forrástípusok:</p>
+<ul>
+<li><strong>Lexikonok, almanachok</strong> (pl. Magyar Életrajzi Lexikon, Gulyás Pál Lexikon): jó kiindulópont, de rendszerint hiányos és nem egységes</li>
+<li><strong>Intézményi névsorok</strong> (akadémiai taglisták, iskolai értesítők, kamarai nyilvántartások)</li>
+<li><strong>Anyakönyvek, levéltári iratok</strong>: pontos adatok, de nagy munkaráfordítás</li>
+<li><strong>Önéletrajzok, nekrológok</strong>: narratív forrás, amelyből strukturált adatot kell kinyerni</li>
+</ul>
+<p><strong>Amit érdemes előre eldönteni:</strong></p>
+<ul>
+<li>Hogyan jelöljük, ha egy adat bizonytalan vagy hiányzik? (pl. <code>NULL</code> vs. „ismeretlen” szöveg)</li>
+<li>Ha egy személynek több neve van (leánykori, felvett, magyarosított), melyik az „alap”?</li>
+<li>Hogyan kezeljük az egymásnak ellentmondó forrásokat?</li>
+</ul>
+</div>
+<div id="prozo-adatbevitel" class="section level2 hasAnchor" number="9.5">
+<h2><span class="header-section-number">9.5</span> Adatbevitel és kódolás<a href="prozo-adatbazis.html#prozo-adatbevitel" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az adatbevitel folyamatában rengeteg apró döntés halmozódik fel, amelyek utólag nagyon nehezen korrigálhatók.</p>
+<p><strong>Kódolási útmutató készítése</strong> minden változóhoz, amelyet a kutatócsoport minden tagja ismer és követ. Például a valláskódok (<code>rk</code>, <code>ref</code>, <code>ev</code>, <code>zsidó</code>) listája legyen rögzített és zárt.</p>
+<p><strong>Rövidítések és változatok</strong> már bevitelkor egységesítendők — vagy utólag harmonizálandók. Az ElitData-ban a foglalkozások pl. <code>HTB</code>, <code>HÁZTARTÁSBELI</code>, <code>Háztartásbeli</code> alakban is előfordultak; ezeket egy harmonizált oszlopban egységesítették.</p>
+<p><strong>Eredeti adat megőrzése.</strong> Soha ne írjuk felül az eredeti, forrásból átvett adatot. Mindig új oszlopba kerüljön a tisztított/harmonizált változat — visszakövethetőség és ellenőrizhetőség céljából.</p>
+</div>
+<div id="prozo-adattisztitas-elitdata" class="section level2 hasAnchor" number="9.6">
+<h2><span class="header-section-number">9.6</span> Adattisztítás és harmonizálás<a href="prozo-adatbazis.html#prozo-adattisztitas-elitdata" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Ez a legtöbb időt felemésztő munkafázis. Az ElitData foglalkozásoszlopán elvégzett tisztítás illusztrálja a tipikus problémákat:</p>
+<p><strong>Kódolási hibák</strong> (karakterkészlet-problémák): <code>ô → ő</code>, <code>û → ű</code>. Ezek rendszerint régi adatbázis-exportokból vagy különböző operációs rendszerek közötti átvitelből adódnak.</p>
+<p><strong>Rövidítések feloldása</strong> egy explicit szótár alapján:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Rövidítés</th>
+<th align="left">Feloldás</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>HTB</code></td>
+<td align="left">Háztartásbeli</td>
+</tr>
+<tr class="even">
+<td align="left"><code>REF LELK</code></td>
+<td align="left">Református lelkész</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>ÁG EV LELK</code></td>
+<td align="left">Ágostai evangélikus lelkész</td>
+</tr>
+<tr class="even">
+<td align="left"><code>VM IKTATÓ</code></td>
+<td align="left">Vármegyei iktató</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>FŐGIMN TANÁR</code></td>
+<td align="left">Főgimnáziumi tanár</td>
+</tr>
+</tbody>
+</table>
+<p>Ahol nem egyértelmű, nem érdemes automatikusan feloldani — inkább maradjon az eredeti rövidítés.</p>
+<p><strong>Kategorikus összevonás</strong>: a <code>FÖLDMÜVES</code>, <code>FÖLDMÍVES</code> és <code>FÖLDMŰVELŐ</code> mind azonos foglalkozást takarnak → egységesítés <code>Földműves</code>-re.</p>
+<p><strong>Technikai eszközök</strong>: Python (<code>openpyxl</code>, <code>pandas</code>), reguláris kifejezések, illetve manuális felülvizsgálat. A szkriptek verziókezelőben (pl. Git) tárolhatók — így reprodukálható és dokumentált a teljes tisztítási folyamat.</p>
+<p><strong>Eredmény az ElitData-ban</strong>: 3 956 foglalkozásbejegyzésből az eredeti ~3 400 különböző ALL CAPS forma 2 390 egyedire csökkent, és az összes bejegyzés olvasható, egységes formátumot kapott.</p>
+</div>
+<div id="prozo-technika" class="section level2 hasAnchor" number="9.7">
+<h2><span class="header-section-number">9.7</span> Technikai megvalósítás<a href="prozo-adatbazis.html#prozo-technika" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="prozo-backend" class="section level3 hasAnchor" number="9.7.1">
+<h3><span class="header-section-number">9.7.1</span> Backend — adatbázis-kezelő rendszer<a href="prozo-adatbazis.html#prozo-backend" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Az ElitData Supabase-t (hosztolt PostgreSQL) használ. Alternatívák:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Megoldás</th>
+<th align="left">Mikor érdemes?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>SQLite</strong></td>
+<td align="left">Egyszemélyes projekt, egyszerű struktúra</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>PostgreSQL / Supabase</strong></td>
+<td align="left">Többfelhasználós, webes hozzáférés</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>MySQL</strong></td>
+<td align="left">Széles körben támogatott, közepes projektek</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Microsoft Access</strong></td>
+<td align="left">Nem ajánlott nagyobb projektekhez</td>
+</tr>
+</tbody>
+</table>
+<p>A lényeg: relációs adatbázis, SQL-lekérdezhetőség.</p>
+</div>
+<div id="prozo-frontend" class="section level3 hasAnchor" number="9.7.2">
+<h3><span class="header-section-number">9.7.2</span> Frontend — vizualizáció és lekérdező felület<a href="prozo-adatbazis.html#prozo-frontend" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Az ElitData egyetlen HTML-fájlban valósítja meg a teljes vizualizációs felületet, Vanilla JS-sel, D3.js-sel és Leaflet.js-sel. Minden vizualizáció az adatbázisból élő lekérdezéssel töltődik. A főbb nézetek:</p>
+<ul>
+<li><strong>Keresés/profil</strong>: egy személy összes adata egy helyen, navigálható kapcsolatokkal</li>
+<li><strong>Statisztikák</strong>: foglalkozás- és vallásmegoszlás, felekezetek közötti házasságok hőtérképe</li>
+<li><strong>Hálózat</strong>: személyek közötti kapcsolatok erő-irányított gráfként (D3 force simulation), vallás szerinti klaszterezési lehetőséggel</li>
+<li><strong>Térkép</strong>: egyetemek földrajzi eloszlása Leaflet.js-sel, szűrhető elit-csoport és vallás szerint</li>
+</ul>
+<div class="rmdnote">
+<p><strong>Miért érdemes mindezt egyetlen fájlban tartani kisebb projekteknél?</strong> Könnyen megosztható, nem igényel szervert a megjelenítéshez, reprodukálható. Ugyanez az elv érvényesül a kurzus annotáló eszközénél is (ld. <a href="tei-annotalo.html#tei-annotalo">5</a> fejezet).</p>
+</div>
+</div>
+</div>
+<div id="prozo-elemzes-elitdata" class="section level2 hasAnchor" number="9.8">
+<h2><span class="header-section-number">9.8</span> Elemzési lehetőségek<a href="prozo-adatbazis.html#prozo-elemzes-elitdata" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az adatbázis felépítése után az alábbi típusú elemzések válnak lehetségessé:</p>
+<p><strong>Leíró statisztika</strong>: ki volt ez a csoport? Vallási, foglalkozási, regionális összetétel.</p>
+<p><strong>Hálózatelemzés</strong>: ki ismert kit? Milyen közösségek rajzolódnak ki a kapcsolatrendszerben? A házassági hálózat a vallási endogámiát mutatja; az egyetemi hálózat az intézményi összetartozást.</p>
+<p><strong>Időbeli változás</strong>: hogyan alakult a csoport összetétele évtizedenként? Milyen pályatípusok jellemzők?</p>
+<p><strong>Térbeli elemzés</strong>: honnan jöttek, hol tanultak, hol dolgoztak?</p>
+<p><strong>Komparatív elemzés</strong>: összehasonlítás más korszakok vagy országok elitadatbázisaival (pl. PROSOP European database of medieval scholars, Oxford DNB).</p>
+</div>
+<div id="prozo-kihivasok-elitdata" class="section level2 hasAnchor" number="9.9">
+<h2><span class="header-section-number">9.9</span> Kihívások és tanulságok<a href="prozo-adatbazis.html#prozo-kihivasok-elitdata" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Kihívás</th>
+<th align="left">Tanulság</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Az adatgyűjtés mindig tovább tart a vártnál</td>
+<td align="left">Minimális adatmodellel kezdjünk; bővíteni mindig lehet</td>
+</tr>
+<tr class="even">
+<td align="left">Az adatminőség egyenetlen a különböző forrásokban</td>
+<td align="left">Mindig jegyezzük fel a forrást és a bizonytalanságot</td>
+</tr>
+<tr class="odd">
+<td align="left">A tisztítás sosem ér véget teljesen</td>
+<td align="left">80%-os tisztaság mellett is lehet értelmes elemzést végezni</td>
+</tr>
+<tr class="even">
+<td align="left">A vizualizáció elvárásait nem könnyű kielégíteni</td>
+<td align="left">A technikai és a szakmai kompetencia ritkán van egy személyben</td>
+</tr>
+<tr class="odd">
+<td align="left">Az adatbázis „soha nem kész”</td>
+<td align="left">Verziókezelés, dokumentáció és archiválás nélkül elvész a munka</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="prozo-etika" class="section level2 hasAnchor" number="9.10">
+<h2><span class="header-section-number">9.10</span> Etikai és jogi szempontok<a href="prozo-adatbazis.html#prozo-etika" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><strong>Élő személyek</strong> esetén adatvédelmi kérdések merülnek fel (GDPR): a Horthy-kori adatbázisnál ez kevésbé kritikus, de kortárs prozopográfiáknál komoly korlát.</li>
+<li><strong>Forrásjog</strong>: digitalizált levéltári anyag felhasználása esetén az intézmény engedélye szükséges lehet.</li>
+<li><strong>Nyilvánosság vs. zárt kutatói hozzáférés</strong>: kinek, milyen formában és milyen feltételekkel legyen elérhető az adatbázis?</li>
+<li><strong>Citálhatóság</strong>: az adatbázisnak legyen DOI-ja és ajánlott hivatkozási formátuma, hogy mások is felhasználhassák.</li>
+</ul>
+</div>
+<div id="prozo-folyamat-osszefoglalas" class="section level2 hasAnchor" number="9.11">
+<h2><span class="header-section-number">9.11</span> A folyamat összefoglalása<a href="prozo-adatbazis.html#prozo-folyamat-osszefoglalas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A prozopográfiai adatbázis-építés lépései — az ElitData példáján:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Kutatási kérdések</strong> megfogalmazása</li>
+<li><strong>Csoport definíciója</strong> + időhatárok meghatározása</li>
+<li><strong>Adatmodell tervezése</strong> (táblák, változók, kódtáblák)</li>
+<li><strong>Forrásválasztás</strong> + kódolási útmutató készítése</li>
+<li><strong>Adatbevitel</strong> (az eredeti formában)</li>
+<li><strong>Adattisztítás</strong> + harmonizálás (új oszlopokban, az eredeti megőrzésével)</li>
+<li><strong>Backend</strong>: relációs adatbázis felépítése</li>
+<li><strong>Frontend</strong>: keresés, statisztika, hálózat, térkép</li>
+<li><strong>Elemzés</strong> + publikálás + archiválás</li>
+</ol>
+<p>Ez a sorrend nem szigorúan lineáris: a legtöbb projekt iteratív, azaz a tisztítás közben derülnek ki az adatmodell hiányosságai, és az elemzés közben merülnek fel újabb adatgyűjtési igények.</p>
 
 </div>
 </div>
@@ -320,8 +546,8 @@
           </div>
         </div>
       </div>
-<a href="week4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="week6.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="week6.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prozo-mdp.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
