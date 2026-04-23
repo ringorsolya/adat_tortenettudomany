@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>15 Adatok publikálása, dokumentáció, etika | adat_tortenettudomanyban.knit</title>
+  <title>11 Saját prozopográfiai eszköz — egyetlen böngészőablakban | adat_tortenettudomanyban.knit</title>
   <meta name="description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="15 Adatok publikálása, dokumentáció, etika | adat_tortenettudomanyban.knit" />
+  <meta property="og:title" content="11 Saját prozopográfiai eszköz — egyetlen böngészőablakban | adat_tortenettudomanyban.knit" />
   <meta property="og:type" content="book" />
   <meta property="og:image" content="/images/cover.jpg" />
   <meta property="og:description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="15 Adatok publikálása, dokumentáció, etika | adat_tortenettudomanyban.knit" />
+  <meta name="twitter:title" content="11 Saját prozopográfiai eszköz — egyetlen böngészőablakban | adat_tortenettudomanyban.knit" />
   
   <meta name="twitter:description" content="Digitális módszerek a történeti kutatásban – MA tankönyv, ELTE BTK Történeti Intézet" />
   <meta name="twitter:image" content="/images/cover.jpg" />
@@ -28,8 +28,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="week9.html"/>
-
+<link rel="prev" href="prozo-mdp.html"/>
+<link rel="next" href="week7.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -372,213 +372,99 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="week10" class="section level1 hasAnchor" number="15">
-<h1><span class="header-section-number">15</span> Adatok publikálása, dokumentáció, etika<a href="week10.html#week10" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<blockquote>
-<p>„FAIR adatok: Findable, Accessible, Interoperable, Reusable”</p>
-</blockquote>
+<div id="prozo-sajat-eszkoz" class="section level1 hasAnchor" number="11">
+<h1><span class="header-section-number">11</span> Saját prozopográfiai eszköz — egyetlen böngészőablakban<a href="prozo-sajat-eszkoz.html#prozo-sajat-eszkoz" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div class="rmdnote">
-<p>Az eddigi fejezetekben adatbázisokat építettünk (<a href="prozo-adatbazis.html#prozo-adatbazis">9</a>), harmonizáltunk (<a href="prozo-adatbazis.html#prozo-adattisztitas-elitdata">9.6</a>), vizualizáltunk (<a href="week9.html#week9">14</a>). A kutatói ciklus utolsó — és legnagyobb valószínűséggel alulbecsült — szakasza a <strong>publikálás és archiválás</strong>: hogyan tesszük az adatainkat elérhetővé, újrahasználhatóvá, és a kutatástörténetben hosszú távon is megtalálhatóvá. Ez a fejezet a történeti adatpublikálás gyakorlati munkafolyamatát és etikai kereteit mutatja be.</p>
+<p>Az előző két fejezetben (<a href="prozo-adatbazis.html#prozo-adatbazis">9</a>, <a href="prozo-mdp.html#prozo-mdp">10</a>) egy nagyobb kutatócsoport által épített, szerveroldali relációs rendszert (ElitData / Supabase), illetve egy 1870 fős párttörténeti korpuszt láttunk. Ebben a fejezetben ennek a logikának a <strong>minimalista, egy kutatóra méretezett</strong> változatát mutatjuk be: egy egyetlen HTML-fájlba zárt prozopográfiai eszközt, amelyet doktoranduszként, szakdolgozóként vagy kutatás előkészítő fázisában is érdemes kipróbálni.</p>
 </div>
-<div id="pub-miert" class="section level2 hasAnchor" number="15.1">
-<h2><span class="header-section-number">15.1</span> Miért publikálni egyáltalán?<a href="week10.html#pub-miert" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A történeti adatbázis publikálása <strong>nem luxus, hanem kutatói kötelezettség</strong> több ok miatt.</p>
-<p><strong>Tudományos reprodukálhatóság.</strong> Egy tanulmány állításai csak akkor ellenőrizhetők, ha az alapul szolgáló adat is hozzáférhető. Az <a href="prozo-mdp.html#prozo-mdp">10</a> fejezet 1870 fős kádergárda-elemzése, vagy az <a href="week6.html#week6">8</a> egyházmegyei ösztöndíjasok vizsgálata más kutatóknak csak akkor lesz kiindulópont, ha az adathalmaz is a kezükbe kerül — különben mindenkinek újra kellene csinálnia az adatgyűjtést.</p>
-<p><strong>Közpénzből finanszírozott kutatás.</strong> Ha a projekt NKFIH, OTKA, H2020, Horizon Europe vagy más közpénz-alapú támogatásból készül, a <strong>támogatási szerződés szinte mindig előírja a nyílt adatpublikálást</strong> — Horizon Europe esetén a FAIR alapelvek szerint, Data Management Plan (DMP) mellékelésével.</p>
-<p><strong>Tudománytörténeti értékőrzés.</strong> Egy gondosan felépített prozopográfiai adatbázis 20–30 év múlva is forrásértékű marad; egy tanulmány melléklet nélkül publikált változata ellenben „halott”. Az ElitData (<a href="prozo-adatbazis.html#prozo-elitdata-bongeszo">9.8</a>) vagy más nagy közgyűjteményi adatbázisok hosszú távú sikere azon múlik, hogy <strong>dokumentált, archivált, citálható</strong> formában élnek-e tovább.</p>
-<p><strong>Közösségi építkezés.</strong> A nyíltan közzétett adatokra <strong>mások ráépítenek</strong>: szélesítik a korpuszt, más kérdéseket tesznek fel, összekötik más adatbázisokkal. Ez a tudományterület egyik legfontosabb mozgatórugója.</p>
+<div id="sajateszk-indoklas" class="section level2 hasAnchor" number="11.1">
+<h2><span class="header-section-number">11.1</span> Miért egy kisebb, saját eszköz?<a href="prozo-sajat-eszkoz.html#sajateszk-indoklas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az ElitData vagy az MDP hatásköri lista elemzése <strong>csoportmunka és hosszú évek befektetése</strong>: szerver, relációs séma, verziókezelt szkriptek, webes frontend. Egy egyéni kutató — különösen a kutatás felderítő szakaszában — rendszerint nem ezzel a készletrel dolgozik. A tipikus helyzet az, hogy:</p>
+<ul>
+<li>a korpusz néhány tíztől néhány száz főig terjed,</li>
+<li>a kutatási kérdés még alakul, tehát az adatmodell is mozgásban van,</li>
+<li>az adatgyűjtés részben már meglévő Excel-táblákból, részben kézi bevitelből épül fel,</li>
+<li>a teljes projekt egyetlen kutatónál található, aki egyszerre akarja kipróbálni a jegyzetelést, a harmonizálást és a vizualizációt.</li>
+</ul>
+<p>Ilyenkor egy teljes Postgres-telepítés és egy saját Vanilla JS-frontend írása aránytalanul nagy ráfordítás. Ugyanakkor az Excel önmagában sem elegendő, mert az <strong>entitások közötti kapcsolatokat</strong> és a <strong>nyers értékek harmonizálását</strong> nem tudja kezelni. Erre a köztes igényre válaszol a most bemutatott eszköz.</p>
 </div>
-<div id="pub-fair" class="section level2 hasAnchor" number="15.2">
-<h2><span class="header-section-number">15.2</span> FAIR — a nyílt adatpublikálás négy alapelve<a href="week10.html#pub-fair" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A FAIR a 2016-ban publikált <em>„FAIR Guiding Principles for scientific data management and stewardship”</em> nevű dokumentum négy betűjét rövidíti. Ma az EU és a legtöbb nagy finanszírozó ezekre hivatkozik.</p>
-<table>
-<colgroup>
-<col width="33%" />
-<col width="33%" />
-<col width="33%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">Betű</th>
-<th align="left">Mit jelent?</th>
-<th align="left">Történeti adatbázisra értve</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><strong>F</strong> — Findable</td>
-<td align="left">Megtalálható</td>
-<td align="left">Tartós azonosító (DOI), részletes metaadatok, indexált repozitórium</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>A</strong> — Accessible</td>
-<td align="left">Hozzáférhető</td>
-<td align="left">Nyílt URL, szabványos protokoll (HTTP/HTTPS), hitelesítés ha kell</td>
-</tr>
-<tr class="odd">
-<td align="left"><strong>I</strong> — Interoperable</td>
-<td align="left">Együttműködő</td>
-<td align="left">Nyílt fájlformátum (CSV, JSON, TEI-XML, nem proprietary Excel-export), szabványos vokabulárium</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>R</strong> — Reusable</td>
-<td align="left">Újrahasználható</td>
-<td align="left">Egyértelmű licenc, részletes dokumentáció, származási (provenance) információ</td>
-</tr>
-</tbody>
-</table>
-<p>A FAIR <strong>nem egyenlő a „nyílt hozzáférés”-sel</strong> — érzékeny adat is lehet FAIR, csak a hozzáférés feltételhez kötött. A prozopográfia kortárs változatában (pl. élő személyek karrieradatai) tipikus, hogy az adat <strong>Findable és Interoperable</strong>, de az <strong>Accessibility</strong> kérelemre történik, <strong>Reusability</strong> pedig etikai és adatvédelmi vállaláshoz kötött.</p>
+<div id="sajateszk-parameterek" class="section level2 hasAnchor" number="11.2">
+<h2><span class="header-section-number">11.2</span> Az eszköz paraméterei<a href="prozo-sajat-eszkoz.html#sajateszk-parameterek" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A <em>Történeti Adatbázis</em> (<code>torteneti_adatbazis.html</code>) egyetlen, kb. 135 kB-os HTML-fájl, amely:</p>
+<ul>
+<li><strong>telepítés nélkül</strong>, bármely korszerű böngészőben elindul (Chrome, Firefox, Edge, Safari),</li>
+<li>az adatot a böngésző <strong>localStorage</strong>-ában tárolja, így offline is működik — internetkapcsolatra csak a térképes csempékhez van szükség,</li>
+<li>négy kész <strong>séma-sablont</strong> kínál (prozopográfia, levelezés, intézmény, anyakönyv), amelyek a jellegzetes levéltári forrástípusokat modellezik,</li>
+<li><strong>CSV/Excel-importot</strong> támogat, ami az Excelből induló adatgyűjtés folytatását teszi lehetővé,</li>
+<li>egy beépített <strong>harmonizálási</strong> felülettel rendelkezik a nyers attribútumértékek egységesítésére,</li>
+<li>négyféle <strong>vizualizációt</strong> kínál egy felületen: idővonal, kapcsolati hálózat, statisztika, térkép.</li>
+</ul>
+<p>Az eszköz architektúrája szándékosan egyszerű, és az ElitData webes böngészőjének logikájára emlékeztet (ld. <a href="prozo-adatbazis.html#prozo-elitdata-bongeszo">9.8</a>): minden egyetlen HTML-ben, minden lekérdezés élőben fut a betöltött adaton, egyetlen fájl jelenti a teljes projektet.</p>
 </div>
-<div id="pub-repozitoriumok" class="section level2 hasAnchor" number="15.3">
-<h2><span class="header-section-number">15.3</span> Hol publikáljunk? — repozitóriumok<a href="week10.html#pub-repozitoriumok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A választás részben a diszciplínától, részben a finanszírozó előírásaitól függ. A történeti adatbázisokra leggyakrabban használt repozitóriumok:</p>
-<table>
-<colgroup>
-<col width="33%" />
-<col width="33%" />
-<col width="33%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="left">Repozitórium</th>
-<th align="left">Profil</th>
-<th align="left">Miért érdemes?</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><strong>Zenodo</strong></td>
-<td align="left">általános, CERN-üzemeltetés</td>
-<td align="left">ingyenes, 50 GB/dataset, DOI, verziókezelés, GitHub-integráció</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>Figshare</strong></td>
-<td align="left">általános, kommersz</td>
-<td align="left">felhasználóbarát UI, hosszú távú archiválás</td>
-</tr>
-<tr class="odd">
-<td align="left"><strong>OSF</strong> (Open Science Framework)</td>
-<td align="left">projekt-fókuszú</td>
-<td align="left">egész kutatási projektet kezelhetünk, preregisztráció</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>Harvard Dataverse</strong></td>
-<td align="left">társadalomtudomány</td>
-<td align="left">kiforrott metaadat-szabványok (DDI), intézményi hálózat</td>
-</tr>
-<tr class="odd">
-<td align="left"><strong>CLARIN</strong></td>
-<td align="left">nyelvtechnológiai, humán</td>
-<td align="left">TEI-XML, korpusz-szabványok, hosszú távú megőrzés</td>
-</tr>
-<tr class="even">
-<td align="left"><strong>Hungaricana</strong></td>
-<td align="left">magyar kultúrtörténet</td>
-<td align="left">magyar közgyűjteményi hálózat, elsősorban forrásközlés</td>
-</tr>
-<tr class="odd">
-<td align="left"><strong>GitHub</strong></td>
-<td align="left">csak verziókezelés</td>
-<td align="left">nem hivatalos adatrepozitórium, DOI-hoz Zenodo-val kell kötni</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Ökölszabály:</strong> kisebb-közepes prozopográfiai vagy forrásközlés jellegű adatbázishoz a <strong>Zenodo</strong> a legegyszerűbb és legelterjedtebb választás. Nyelvtechnológiai / TEI-XML korpuszhoz (mint a <a href="week8.html#nsz-korpusz">13.2</a> adatai) <strong>CLARIN</strong>. Preregisztrált kutatáshoz <strong>OSF</strong>.</p>
-<div id="pub-zenodo" class="section level3 hasAnchor" number="15.3.1">
-<h3><span class="header-section-number">15.3.1</span> Munkamenet Zenodón: egy tipikus publikálás<a href="week10.html#pub-zenodo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sajateszk-adatmodell" class="section level2 hasAnchor" number="11.3">
+<h2><span class="header-section-number">11.3</span> Adatmodell: könnyű séma + EAV<a href="prozo-sajat-eszkoz.html#sajateszk-adatmodell" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az eszköz hibrid adatmodellt használ, amely az ElitData <code>tbl_Szemelyek</code> / <code>tbl_Foglalkozasok</code> / <code>tbl_Kapcsolatok</code> szerkezetének egyszerűsített változata.</p>
+<p><strong>Rekord (entitás).</strong> Minden rekordnak van néhány kötött, séma által meghatározott alapmezője (személy esetén pl. név, születési év, halálozási év, nem, forrás, megjegyzés). Ez a rész felel meg az ElitData <code>tbl_Szemelyek</code> táblájának.</p>
+<p><strong>Attribútum (kulcs–érték).</strong> Ezen felül minden rekord mellé <strong>tetszőleges számú kulcs–érték pár</strong> rögzíthető, típusmegjelöléssel: <code>Foglalkozás = ügyvéd</code>, <code>Vallás = református</code>, <code>Lakóhely = Debrecen</code>. Ez a generikus EAV-tábla (Entity-Attribute-Value) a <a href="prozo-adatbazis.html#prozo-adatmodell">9.3</a> fejezetben tárgyalt <code>tbl_Foglalkozasok</code> / <code>tbl_Egyetemek</code> típusú többértékű jellemzőket váltja ki: a kutatónak nem kell előre minden lehetséges jellemzőnek táblát tervezni, elég, ha a kutatás közben felmerülő új dimenziót új attribútum-típusként felveszi.</p>
+<p><strong>Kapcsolat.</strong> Két entitás közötti él, típussal (<em>házastárs</em>, <em>szülő/gyerek</em>, <em>kolléga</em>, <em>tanítvány</em>, <em>egyéb</em>) és forráshivatkozással. Ez az ElitData <code>tbl_Kapcsolatok</code> táblájának közvetlen megfelelője.</p>
+<p>Az EAV-modell <strong>előnye</strong>, hogy gyorsan fel lehet építeni vele egy kutatási adatbázist olyan esetekben, amikor az attribútumok listája menet közben bővül. <strong>Hátránya</strong> ugyanakkor, hogy tipusos lekérdezések (pl. „minden személy, akinek a születési éve 1820 és 1830 között van <em>és</em> az első foglalkozása tanár volt”) nehezebbek, mint egy tiszta relációs sémában. Éppen ezért az eszköz a kutatás <strong>előkészítő és feltáró szakaszára</strong> ajánlott — az eredmények nagy léptékű elemzését érdemes végül egy tényleges relációs rendszerbe (SQLite, PostgreSQL) átvinni (ld. <a href="prozo-adatbazis.html#prozo-backend">9.7.1</a>).</p>
+</div>
+<div id="sajateszk-folyamat" class="section level2 hasAnchor" number="11.4">
+<h2><span class="header-section-number">11.4</span> Kutatási munkafolyamat az eszközzel<a href="prozo-sajat-eszkoz.html#sajateszk-folyamat" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A <a href="prozo-adatbazis.html#prozo-folyamat-osszefoglalas">9.12</a> szakaszban felvázolt kilenc lépésből az eszköz a 3–8. lépést fedi le egy integrált felületen. A tipikus menet:</p>
 <ol style="list-style-type: decimal">
-<li>Regisztráció a <a href="https://zenodo.org">zenodo.org</a> oldalon (ORCID-dal javasolt, mert így az adat automatikusan a kutatói profilodhoz rendelődik).</li>
-<li><strong>Upload</strong> → fájlok feltöltése (CSV, xlsx, JSON, PDF-dokumentáció, README).</li>
-<li><strong>Metaadatok</strong> kitöltése: szerzők ORCID-del, cím, leírás, kulcsszavak, publikálási dátum, nyelvi kódok, kapcsolódó publikációk DOI-jai.</li>
-<li><strong>Licenc</strong> választása (ld. <a href="week10.html#pub-licencek">15.6</a> szakasz).</li>
-<li><strong>Publish</strong> → a Zenodo kiad egy állandó DOI-t (<code>10.5281/zenodo.XXXXXXX</code>), amelyre a továbbiakban hivatkozni lehet.</li>
-<li>A DOI-t <strong>be kell illeszteni a tanulmányba</strong> (pl. lábjegyzetben vagy a „Data availability statement”-ben).</li>
+<li><strong>Séma választása</strong> (prozopográfia sablon), szükség esetén mezőnevek testre szabása a Beállításokban.</li>
+<li><strong>Meglévő Excel/CSV importálása</strong> oszloponkénti leképezéssel: melyik oszlop kerül az alaprekordba, melyik attribútummá.</li>
+<li><strong>Manuális kiegészítés</strong> (új rekordok bevitele űrlapon, vagy meglévő rekordok bővítése életrajzi adatokkal).</li>
+<li><strong>Harmonizálás</strong>: nyers attribútum-értékek (pl. „r.k.”, „rk”, „római katolikus”) <strong>külön oszlopban</strong> normalizált változatra való leképezése, az eredeti érték megtartása mellett (ld. a <a href="prozo-adatbazis.html#prozo-adattisztitas-elitdata">9.6</a> szakasz elvét).</li>
+<li><strong>Kapcsolatok rögzítése</strong> forrásmegjelöléssel.</li>
+<li><strong>Vizualizáció</strong>: időbeli eloszlás, kapcsolati gráf, attribútum-statisztika, földrajzi szóródás.</li>
+<li><strong>Publikálás</strong> (statikus véglegesítés) vagy exportálás további elemzéshez.</li>
 </ol>
-<p>A Zenodo támogatja a <strong>verziózást</strong>: ha később javítunk vagy bővítünk az adatbázison, új verzió hozható létre, amely saját DOI-t kap, de egy közös „concept DOI”-hoz tartozik — így az olvasó mindig a legutolsó verzióra mutathat.</p>
 </div>
-</div>
-<div id="pub-readme" class="section level2 hasAnchor" number="15.4">
-<h2><span class="header-section-number">15.4</span> README mint műfaj — a dokumentáció standardja<a href="week10.html#pub-readme" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A README egy egyszerű szöveges fájl (<code>README.md</code> vagy <code>README.txt</code>), amelyet a repozitórium gyökerébe helyezünk. <strong>Nélküle a legszebb adat is használhatatlan</strong>, mert az olvasó nem tudja, mit jelentenek az oszlopok, hogyan gyűjtötték őket, és mit szabad vele csinálni.</p>
-<div id="pub-readme-struktura" class="section level3 hasAnchor" number="15.4.1">
-<h3><span class="header-section-number">15.4.1</span> Egy jól felépített README<a href="week10.html#pub-readme-struktura" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<pre><code># [A projekt/adatbázis címe]
-
-## Rövid leírás
-Egy 3–5 mondatos összefoglaló: mit tartalmaz az adat, milyen kérdésre
-készült, milyen korszakra és földrajzi területre vonatkozik.
-
-## Szerzők és hozzájárulás
-Név · intézmény · ORCID · szerep (adatgyűjtés / tisztítás / elemzés / dokumentáció)
-
-## Az adatbázis szerkezete
-Fájlok listája, minden fájlhoz rövid magyarázat:
-  - szemelyek.csv      — 1 870 rekord, 10 oszlop
-  - foglalkozasok.csv  — ~3 956 bejegyzés, 4 oszlop
-  - README.md          — ez a dokumentum
-  - metadata.xml       — DDI-kompatibilis metaadat
-
-## Oszlopok (kódkönyv / data dictionary)
-| Oszlop          | Típus  | Értékek           | Magyarázat                         |
-|-----------------|--------|-------------------|-------------------------------------|
-| szemely_id      | int    | 1–1870            | egyedi azonosító                    |
-| nev             | string | szabadszöveg      | „Vezetéknév Keresztnév&quot; formátum    |
-| szul_ev         | int    | 1880–1935         | születési év, NULL = ismeretlen     |
-| vallas          | string | rk, ref, ev, izr  | kódtábla a vallasok.csv-ben         |
-
-## Források
-Mely elsődleges és másodlagos forrásokból származik az adat;
-hivatkozásokkal.
-
-## Adatgyűjtés módszertana
-Hogyan válogattuk ki a személyeket, milyen elvek szerint.
-Mit csináltunk a bizonytalan adatokkal.
-
-## Harmonizálási döntések
-A nyers értékek tisztításának elvei (pl. a \@ref(prozo-adattisztitas-elitdata) fejezet
-logikája szerint: az eredeti érték megmaradt az eredeti oszlopban, a kanonikus
-forma külön oszlopba került).
-
-## Ismert hiányosságok és bizonytalanságok
-Mit NEM tudunk az adatról; hol vannak szisztematikus torzítások.
-
-## Verzióhistória
-v1.0 (2024-05) — első publikáció
-v1.1 (2025-01) — foglalkozási harmonizáció finomítása
-
-## Licenc
-CC-BY 4.0 (ld. LICENSE fájl)
-
-## Citálás
-Preferált citálási forma:
-[Szerzők]. (2024). [Cím]. [Repozitórium], DOI: 10.5281/zenodo.XXXXXXX
-
-## Kapcsolat
-[Szerző] · [Intézmény] · [email]</code></pre>
-<p>Ez a sablon az <strong>ökölszabály</strong> minimuma — egy tanulmány mellékleteként 500–2000 szó hosszú README-t érdemes készíteni, attól függően, mekkora az adatbázis és mennyi a harmonizálási döntés.</p>
-</div>
-<div id="pub-readme-hibak" class="section level3 hasAnchor" number="15.4.2">
-<h3><span class="header-section-number">15.4.2</span> Gyakori hibák a README-ben<a href="week10.html#pub-readme-hibak" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="sajateszk-letoltes" class="section level2 hasAnchor" number="11.5">
+<h2><span class="header-section-number">11.5</span> Az eszköz letöltése és a demonstrációs adatsor<a href="prozo-sajat-eszkoz.html#sajateszk-letoltes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A fejezet kipróbálásához két fájl letölthető formában elérhető:</p>
 <ul>
-<li><strong>„Önmagáért beszélő” oszlopnevek</strong>, amelyek valójában nem beszélnek — a <code>status</code> vagy <code>tipus</code> oszlop kódrendszere nélkül az adat használhatatlan.</li>
-<li><strong>A harmonizálási döntések dokumentálásának hiánya</strong> — 5 év múlva a kutató maga sem fogja tudni, miért került a „R.k.” a „Római katolikus” kategóriába.</li>
-<li><strong>A „hiányzik” kódolásának elmulasztása</strong> — üres cella, „n.a.”, <code>NULL</code>, <code>-</code> vagy <code>?</code> — legalább tudni kell, melyik volt az.</li>
-<li><strong>A verzióhistória hiánya</strong> — ha a repozitóriumban több verzió is van, és egyik sem tudja, mi változott, akkor a többi kutató sem tudja.</li>
+<li><a href="torteneti_adatbazis.html">torteneti_adatbazis.html</a> — maga a böngészőeszköz (~135 kB, egyetlen HTML-fájl)</li>
+<li><a href="MTA_alapitok_es_elso_nemzedek_1825-1850.xlsx">MTA_alapitok_es_elso_nemzedek_1825-1850.xlsx</a> — 50 rekordos prozopográfiai mintaadat az MTA első nemzedékéről (4 alapító, 4 kezdeti tisztségviselő, az 1831-ben megválasztott 23 rendes tag, és az 1831–1850 között felvett további 19 tag)</li>
 </ul>
+<p><strong>Letöltés:</strong> jobb kattintás a linken → „Hivatkozás mentése másként”. Az eszközt egy dedikált mappában célszerű tárolni, mert a böngésző a fájl elérési útjához köti a localStorage-tárolót.</p>
+<p><strong>Indítás:</strong> a <code>torteneti_adatbazis.html</code> fájlra kettős kattintás, vagy a fájl behúzása egy megnyitott böngészőablakba. A működéshez nincs szükség internetkapcsolatra — egyedül a térképi csempék szervikus forrását kivéve.</p>
 </div>
+<div id="sajateszk-mta" class="section level2 hasAnchor" number="11.6">
+<h2><span class="header-section-number">11.6</span> Demonstráció: az MTA első nemzedéke<a href="prozo-sajat-eszkoz.html#sajateszk-mta" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az MTA első nemzedéke tanulságos prozopográfiai minta: viszonylag kis elemszám mellett a magyar tudományos élet egy meghatározott alapító csoportját teszi vizsgálhatóvá, és olyan klasszikus prozopográfiai kérdések illusztrálására alkalmas, mint a felekezeti megoszlás, a foglalkozási heterogenitás, a tudományos osztályok közti arány, vagy a mesterségbeli kapcsolatok (pl. Kazinczy tanítványi köre).</p>
+<div id="sajateszk-import" class="section level3 hasAnchor" number="11.6.1">
+<h3><span class="header-section-number">11.6.1</span> Adatimport és autoMap<a href="prozo-sajat-eszkoz.html#sajateszk-import" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A demonstrációs xlsx-ben az oszlopnevek tudatosan úgy vannak kialakítva, hogy a séma mezőivel egybeessenek: <em>Teljes név</em>, <em>Születési év</em>, <em>Halálozási év</em>, <em>Nem</em>, <em>Forrás</em>, <em>Megjegyzés</em> — ezek automatikusan a sablon alapmezőibe kerülnek. A további oszlopok (<em>Születési hely</em>, <em>Foglalkozás</em>, <em>Vallás</em>, <em>MTA szerep</em>, <em>MTA osztály</em>, <em>Választás éve</em>) <strong>attribútum-típusokként</strong> importálódnak. Az automatikus oszlopleképezést (<code>autoMap</code>) érdemes minden esetben felülvizsgálni, mert egy valós forrásban az oszlopnevek ritkán fognak ilyen tisztán illeszkedni.</p>
 </div>
-<div id="pub-metaadatok" class="section level2 hasAnchor" number="15.5">
-<h2><span class="header-section-number">15.5</span> Metaadatok és szabványok<a href="week10.html#pub-metaadatok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A README emberi olvasóra szabott dokumentum. A gépi feldolgozáshoz <strong>strukturált metaadat</strong> is kell, amelyet a repozitórium a háttérben tárol és szolgáltat.</p>
-<p><strong>Dublin Core</strong> — minimum 15 mező (title, creator, subject, description, publisher, date, type, format, identifier, language, rights, coverage stb.). Minden komoly repozitórium a bemenetét ezekre képezi le. Általános humán adatokhoz elegendő.</p>
-<p><strong>DDI (Data Documentation Initiative)</strong> — a társadalomtudományi survey- és longitudinális adathalmazok szabványa. A Harvard Dataverse és az ICPSR-alapú repozitóriumok ebben gondolkodnak. Prozopográfiai adatbázis-ra is jól illeszkedik.</p>
-<p><strong>TEI P5</strong> — kritikai forráskiadások, szövegkorpuszok. A <a href="week8.html#nsz-korpusz">13.2</a> fejezet anyaga ebben publikálható; a TEI header maga egy gazdag metaadatstruktúra.</p>
-<p><strong>schema.org / DataCite</strong> — weben publikált strukturált adathoz; a DataCite a DOI-kiadásnál elvárt séma.</p>
-<p>A gyakorlatban <strong>nem kell kézzel XML-t írni</strong>: a repozitóriumok (Zenodo, Dataverse) űrlapon kérdezik be a mezőket, és háttérben generálják a megfelelő szabvány szerinti metaadat-fájlt.</p>
+<div id="sajateszk-harmonizal" class="section level3 hasAnchor" number="11.6.2">
+<h3><span class="header-section-number">11.6.2</span> Harmonizálás: a vallás attribútum<a href="prozo-sajat-eszkoz.html#sajateszk-harmonizal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A demonstrációs fájl <strong>szándékos zajt</strong> tartalmaz: a Vallás oszlopban három felekezet szerepel tíz különböző írásmódban (<code>r.k.</code>, <code>r.kat.</code>, <code>rk</code>, <code>r. kat.</code>, <code>római katolikus</code>, <code>katolikus</code>, <code>ref.</code>, <code>református</code>, <code>ev.</code>, <code>evangélikus</code>). Ez a <a href="prozo-adatbazis.html#prozo-adattisztitas-elitdata">9.6</a> szakaszban bemutatott valós helyzet miniatűr másolata: ugyanaz a forrásadat, a tipikus bevitel-variabilitással.</p>
+<p>A Harmonizálás fülön:</p>
+<ol style="list-style-type: decimal">
+<li>Az <strong>autoFill</strong> minden nyers értéket önmagával tölt fel harmonizált párosként.</li>
+<li>A kutató a harmonizált oszlopban <strong>három kanonikus értékre</strong> csökkenti a tíz variánst: <em>Római katolikus</em>, <em>Református</em>, <em>Evangélikus</em>.</li>
+<li>Az eredeti nyers érték <strong>megmarad</strong> — ez reprodukálhatósági és forráshűségi követelmény.</li>
+</ol>
+<p>A foglalkozás-attribútumon hasonló logikával dolgozható ki egy 6–8 elemű kanonikus kategóriarendszer (politikus, irodalmár, tudós, egyházi, orvos, jogász, főnemes). A <a href="prozo-adatbazis.html#prozo-adattisztitas-elitdata">9.6</a> szakaszban leírt módszertannal azonos: <strong>soha ne írjuk felül az eredeti értéket</strong>, a normalizált változat mindig külön oszlopban tárolódik.</p>
 </div>
-<div id="pub-licencek" class="section level2 hasAnchor" number="15.6">
-<h2><span class="header-section-number">15.6</span> Licencek — ki mit tehet az adatommal?<a href="week10.html#pub-licencek" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A licenc az, amely <strong>jogilag</strong> rendezi az újrahasználást. A legismertebb választások történeti adatokra:</p>
+<div id="sajateszk-kapcsolatok" class="section level3 hasAnchor" number="11.6.3">
+<h3><span class="header-section-number">11.6.3</span> Kapcsolatok: forráskritika<a href="prozo-sajat-eszkoz.html#sajateszk-kapcsolatok" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A Kapcsolatok fülön rögzíthető viszonyok forrásmegjelölése nem formalitás, hanem a prozopográfiai adatbázis <strong>szakmai minőségének</strong> központi eleme. Néhány a demonstrációs adatsoron értelmes kapcsolat:</p>
+<ul>
+<li>Kazinczy Ferenc → <em>Tanítvány</em> → Kölcsey Ferenc (forrás: Kazinczy-levelezés)</li>
+<li>Kazinczy Ferenc → <em>Tanítvány</em> → Toldy Ferenc</li>
+<li>Vörösmarty Mihály ↔︎ <em>Kolléga</em> ↔︎ Bajza József (forrás: Athenaeum triumvirátus)</li>
+<li>Kisfaludy Sándor ↔︎ <em>Testvér</em> ↔︎ Kisfaludy Károly</li>
+<li>Eötvös József ↔︎ <em>Kolléga</em> ↔︎ Szalay László (forrás: Centralisták)</li>
+</ul>
+<p>Egy valódi kutatásban minden kapcsolatbejegyzéshez <strong>konkrét, visszakereshető</strong> forráshivatkozás társul (levelezéskötet oldalszáma, akadémikus életrajz, szakirodalom). A prozopográfiai adatbázis értéke jelentős részben a kapcsolati rétegben van — az elemzés nagy része az ElitData, az MDP, és hasonló rendszerek esetében is a kapcsolathálózat statikus és időbeli vizsgálatán alapul.</p>
+</div>
+<div id="sajateszk-viz" class="section level3 hasAnchor" number="11.6.4">
+<h3><span class="header-section-number">11.6.4</span> Vizualizáció<a href="prozo-sajat-eszkoz.html#sajateszk-viz" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Az eszköz négy vizualizációs nézete párhuzamba állítható az ElitData négy nézetével (ld. <a href="prozo-adatbazis.html#prozo-elitdata-bongeszo">9.8</a> szakasz):</p>
 <table>
 <colgroup>
 <col width="33%" />
@@ -587,85 +473,45 @@ Preferált citálási forma:
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">Licenc</th>
-<th align="left">Feltétel</th>
-<th align="left">Mikor érdemes?</th>
+<th align="left">ElitData böngésző</th>
+<th align="left">A saját eszköz</th>
+<th align="left">Elemzési funkció</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong>CC0 1.0</strong> (Public Domain)</td>
-<td align="left">Semmi</td>
-<td align="left">Ha az adat közkincsből származik és nincs szerzői jogi érdekünk</td>
+<td align="left">Statisztikák (vallási megoszlás, foglalkozás)</td>
+<td align="left"><strong>Statisztika</strong></td>
+<td align="left">leíró megoszlások, endogámia</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>CC-BY 4.0</strong></td>
-<td align="left">Attribúció kötelező</td>
-<td align="left">Akadémiai publikáláshoz a leggyakoribb választás</td>
+<td align="left">Személyes hálózat + egyetemi háló</td>
+<td align="left"><strong>Hálózat</strong> (D3 force-directed)</td>
+<td align="left">kapcsolati struktúra, klaszterek</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>CC-BY-SA 4.0</strong></td>
-<td align="left">Attribúció + azonos licenc</td>
-<td align="left">Ha biztosítani akarjuk, hogy a ráépített adatok is nyíltak maradjanak</td>
+<td align="left">Térkép</td>
+<td align="left"><strong>Térkép</strong> (Leaflet + helynév-szótár)</td>
+<td align="left">földrajzi eloszlás</td>
 </tr>
 <tr class="even">
-<td align="left"><strong>CC-BY-NC 4.0</strong></td>
-<td align="left">Attribúció + nem-kereskedelmi</td>
-<td align="left">Ha óvatosak vagyunk kommercializálástól, de sok nyílt szótár ezt nem fogadja el</td>
+<td align="left">Profilnézet</td>
+<td align="left"><strong>Rekordok</strong> (kártyás nézet)</td>
+<td align="left">egyéni adatlapok</td>
 </tr>
 <tr class="odd">
-<td align="left"><strong>ODbL</strong></td>
-<td align="left">Attribúció + SA + „open database” specifikus</td>
-<td align="left">Tiszta adatbázis-licenc (az OpenStreetMap is ezt használja)</td>
+<td align="left">—</td>
+<td align="left"><strong>Idővonal</strong></td>
+<td align="left">életutak időbeli dimenziója</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Ökölszabály:</strong> ha nincs különösebb okunk korlátozni, a <strong>CC-BY 4.0</strong> a „default”. Az NC (non-commercial) és az ND (no-derivatives) akadémiai adat esetén <strong>inkább káros, mint hasznos</strong> — megakadályozza, hogy más tankönyvek, aggregátor-projektek, publikációs platformok használják.</p>
-<p>Fontos megkülönböztetés: a <strong>szoftverre</strong> (pl. a <code>torteneti_adatbazis.html</code> kódja) más licencek valók — MIT, Apache 2.0, GPL —; Creative Commons licencek adatra és szövegre valók, nem kódra.</p>
-</div>
-<div id="pub-gdpr" class="section level2 hasAnchor" number="15.7">
-<h2><span class="header-section-number">15.7</span> Adatvédelem és GDPR a történeti kutatásban<a href="week10.html#pub-gdpr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A GDPR (az EU általános adatvédelmi rendelete) a <strong>természetes személyek személyes adataira</strong> vonatkozik. Történeti kutatásban két nagy esetet kell megkülönböztetni.</p>
-<div id="pub-elhunyt" class="section level3 hasAnchor" number="15.7.1">
-<h3><span class="header-section-number">15.7.1</span> Elhunyt személyek<a href="week10.html#pub-elhunyt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A GDPR kifejezetten kimondja: <strong>nem terjed ki elhunyt személyek adataira</strong> (Recital 27). Tehát egy 19. századi vagy korábbi prozopográfia (pl. az <a href="prozo-sajat-eszkoz.html#prozo-sajat-eszkoz">11</a> MTA-adatsora, az <a href="prozo-adatbazis.html#prozo-elitdata-bongeszo">9.8</a> Horthy-kori elitje) alapvetően GDPR-mentes. <em>Alapvetően</em>, mert a tagállami jog ezt kiegészítheti:</p>
-<ul>
-<li><strong>Magyarországon</strong> az Infotv. külön nem szabályozza az elhunytak adatait, de a <strong>kegyeleti jog</strong> (Ptk.) szerint a hozzátartozók a szeméyhez fűződő jog sérelme esetén fellebbezhetnek. Ez különösen érzékeny adatokra (szexuális orientáció, súlyos betegség, bűncselekmény) vonatkozik.</li>
-<li><strong>Egyes tagállamokban</strong> (pl. Dánia, Olaszország) a GDPR kifejezetten kiterjeszthető elhunytakra is — nemzetközi publikálásnál ezt mérlegelni kell.</li>
-</ul>
-</div>
-<div id="pub-elok" class="section level3 hasAnchor" number="15.7.2">
-<h3><span class="header-section-number">15.7.2</span> Élő személyek<a href="week10.html#pub-elok" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A kortárs (pl. 1990–2020-as) prozopográfia alapesetben a GDPR hatálya alá esik. A két tipikus kutatói jogalap:</p>
-<p><strong>Tudományos kutatás</strong> (GDPR 89. cikk): tudományos, statisztikai, levéltári célú feldolgozás megengedett <strong>megfelelő biztosítékok</strong> mellett. Ezek közé tartozik: adatminimalizálás, álnevesítés, hozzáférés-szabályozás, explicit etikai engedély (intézményi kutatóbizottság).</p>
-<p><strong>Hozzájárulás</strong> (GDPR 6. cikk (1) a)): a személy írásos, tájékozott hozzájárulása. Prozopográfiai adatokra ritkán praktikus (pl. 500 fős mintánál), de interjú- vagy életútkutatásnál standard.</p>
-<p><strong>Gyakorlati tanács:</strong> kortárs adaton <strong>soha ne publikáljunk név + cím + születési dátum kombinációt</strong> nyílt adathalmazként. Az ilyen adat <strong>pseudonimizálva</strong> (ID-vel, a nevek külön, hozzáférés-szabályozott táblában) publikálandó.</p>
-</div>
-<div id="pub-szenzitiv" class="section level3 hasAnchor" number="15.7.3">
-<h3><span class="header-section-number">15.7.3</span> Különleges (szenzitív) kategóriák<a href="week10.html#pub-szenzitiv" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>A GDPR 9. cikke szerint <strong>szigorúbb védelem</strong> vonatkozik az alábbi adatokra: faji/etnikai hovatartozás, politikai vélemény, vallási/filozófiai meggyőződés, szakszervezeti tagság, genetikai/biometrikus adat, egészség, szexuális élet/orientáció.</p>
-<p>Ezek közül történeti kutatásban a <strong>vallási hovatartozás</strong> és a <strong>politikai vélemény/párttagság</strong> kerül elő rendszeresen — az MTA felekezeti adatai, az MDP pártbeli pozíciók, az egyházmegyei ösztöndíjasok felekezeti adatai mind ebbe esnek. <strong>Elhunyt személyeknél</strong> nem GDPR-probléma, <strong>élőknél</strong> igen, és itt még az intézményi etikai engedély is szükséges lehet.</p>
+<p>A térkép beépített helynév-szótárat használ (ékezet-függetlenül egyeztet) a Kárpát-medence és a szomszédos régiók történelmi helyneveivel; közvetlen koordináta is megadható <code>47.49, 19.04</code> formátumban, ha egy forráshely nincs a szótárban. A térkép alatt egy diagnosztikus sáv jelzi, hány rekordban van/nincs érték az aktuálisan választott hely-attribútumnál.</p>
 </div>
 </div>
-<div id="pub-etika" class="section level2 hasAnchor" number="15.8">
-<h2><span class="header-section-number">15.8</span> Kutatói etika történeti adatokon<a href="week10.html#pub-etika" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Az adatvédelmi joggal nem fed le mindent, amit a történész a publikáláskor mérlegelni szokott.</p>
-<p><strong>Kegyeleti érzékenység.</strong> Egy elhunyt személy családjának vagy leszármazottainak fájhat a részletes, negatív tónusú karrierfeltárás, még ha a kutatás jogilag teljesen rendben is van. Ez különösen érzékeny korokra (Horthy-, Rákosi-, Kádár-rendszer) vonatkozik. Az <a href="prozo-mdp.html#prozo-mdp">10</a> fejezet MDP-adatbázisa esetében is: a kádergárda tagjai ma többnyire elhunytak, de leszármazottaik élnek, és a párttagság / besúgói múlt feltárása komoly kegyeleti következménnyel járhat.</p>
-<p><strong>Archivális szerződések.</strong> Ha levéltári anyagból gyűjtöttünk adatot, az intézmény (MNL, egyházi levéltárak, MTA KK) szerződése rendszerint tartalmaz egy <strong>felhasználási klauzulát</strong> — pl. a digitalizált kép nem publikálható, csak a belőle kinyert adat. Ezt pontosan be kell tartani.</p>
-<p><strong>Élő kutatói közösség.</strong> Ha egy témán több kutató dolgozik párhuzamosan, a korai publikálás <strong>kisajátíthatja</strong> a kutatási területet. Etikus gyakorlat: a korai adat megosztása a közösséggel, amikor még a részletes elemzés folyik. Ez a pre-registration és a „living database” gyakorlata.</p>
-<p><strong>Attribúció.</strong> Ha az adat egy részét más kutató gyűjtötte vagy korábbi publikációból vettük át, <strong>névvel meg kell említeni</strong> — akkor is, ha formális engedély nem volt kötelező.</p>
-</div>
-<div id="pub-archivalas" class="section level2 hasAnchor" number="15.9">
-<h2><span class="header-section-number">15.9</span> Hosszú távú megőrzés és archiválás<a href="week10.html#pub-archivalas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A publikálás <strong>nem azonos</strong> az archiválással. Egy ingyenes kommerciális szolgáltatás (Dropbox, Google Drive, egy egyetemi szerveroldal) 10 év múlva lehet, hogy nem létezik. Mit jelent a <em>hosszú távú megőrzés</em> a gyakorlatban?</p>
-<p><strong>Intézményi repozitórium.</strong> Az egyetemek (ELTE EDIT, MTA REAL) saját repozitóriumba gyűjtik a disszertációkat és a mellékletüket — ezek megőrzését az intézmény garantálja.</p>
-<p><strong>OAIS-szabványú letéti szolgáltatás</strong> (pl. Zenodo, a CERN adatkezelésével) — itt a hosszú távú megőrzés formális ígéret (Zenodo: „legalább a CERN élettartamára”).</p>
-<p><strong>Formátum-függetlenség.</strong> A <code>.docx</code> vagy <code>.xlsx</code> 20 év múlva nehezen olvasható lehet; a <code>.csv</code>, <code>.xml</code>, <code>.json</code>, <code>.txt</code> gyakorlatilag örök. <strong>A Word-fájl mellett mindig legyen egy CSV vagy TEI-XML változat is</strong>.</p>
-<p><strong>Több helyen.</strong> Egy repozitórium és egy GitHub, vagy egy intézményi és egy kereskedelmi. A LOCKSS elv: <em>Lots of Copies Keep Stuff Safe</em>.</p>
-</div>
-<div id="pub-checklist" class="section level2 hasAnchor" number="15.10">
-<h2><span class="header-section-number">15.10</span> Összefoglalás: egy prozopográfiai projekt publikálási kontrollistája<a href="week10.html#pub-checklist" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Egy tanulmány mellékleteként kiadandó adatbázis publikálási lépései:</p>
+<div id="sajateszk-mikor" class="section level2 hasAnchor" number="11.7">
+<h2><span class="header-section-number">11.7</span> Mikor az egyetlen HTML-fájl a jó válasz, és mikor nem?<a href="prozo-sajat-eszkoz.html#sajateszk-mikor" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A választás a kutatási projekt mérete és munkamódja szerint alakul:</p>
 <table>
 <colgroup>
 <col width="50%" />
@@ -673,117 +519,67 @@ Preferált citálási forma:
 </colgroup>
 <thead>
 <tr class="header">
-<th align="left">Lépés</th>
-<th align="left">Kérdés</th>
+<th align="left">Szituáció</th>
+<th align="left">Javasolt eszköz</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">1. Nyers + harmonizált adat</td>
-<td align="left">Mindkét verzió elérhető? Egyértelmű, melyik melyik?</td>
+<td align="left"><strong>Exploratív, 20–300 fős prozopográfia, 1 kutató</strong></td>
+<td align="left">Történeti Adatbázis (ez az eszköz)</td>
 </tr>
 <tr class="even">
-<td align="left">2. README</td>
-<td align="left">Minden oszlopnak van-e magyarázata? A harmonizálási döntések dokumentáltak-e?</td>
+<td align="left"><strong>Nagy korpusz (&gt;1 000 személy), több kutató, verziókezelt szkriptek</strong></td>
+<td align="left">Relációs DB (SQLite / PostgreSQL), saját vagy hosztolt</td>
 </tr>
 <tr class="odd">
-<td align="left">3. Metaadat</td>
-<td align="left">Szerzők, dátum, kulcsszavak, kapcsolódó publikációk DOI-jai kitöltve?</td>
+<td align="left"><strong>Publikus webes böngésző funkció, CI/CD, hozzáférés-szabályozás</strong></td>
+<td align="left">Supabase / teljes backend + külön frontend (mint az ElitData)</td>
 </tr>
 <tr class="even">
-<td align="left">4. Licenc</td>
-<td align="left">A megfelelő Creative Commons (vagy ODbL) licenc választva? Az adatra, a kódra külön?</td>
-</tr>
-<tr class="odd">
-<td align="left">5. Forrásattribúció</td>
-<td align="left">Minden forráshivatkozás pontos? A korábbi gyűjtők/kutatók említve?</td>
-</tr>
-<tr class="even">
-<td align="left">6. Adatvédelem</td>
-<td align="left">Van-e élő személy az adatban? Ha igen, pszeudonimizálva vagy hozzáférés-szabályozva?</td>
-</tr>
-<tr class="odd">
-<td align="left">7. Repozitórium</td>
-<td align="left">Zenodo / Dataverse / CLARIN / Hungaricana kiválasztva, megfelel-e a finanszírozónak?</td>
-</tr>
-<tr class="even">
-<td align="left">8. DOI</td>
-<td align="left">Kiadott DOI a tanulmányba beillesztve?</td>
-</tr>
-<tr class="odd">
-<td align="left">9. Verziózás</td>
-<td align="left">Ha később változni fog, verziózási terv megvan?</td>
-</tr>
-<tr class="even">
-<td align="left">10. Személyes archiválás</td>
-<td align="left">A saját gépen/intézményi felhőben is őrzött biztonsági másolat?</td>
+<td align="left"><strong>Intézményi adminisztráció, közös nyilvántartás több író joggal</strong></td>
+<td align="left">Dedikált adatbáziskezelő, Access vagy web-alapú</td>
 </tr>
 </tbody>
 </table>
-<p>A lista végigmenve <strong>néhány óra</strong> a 1–2 napos munkát jelent — de a kutatás társadalmi értékét sokszorosára növeli.</p>
+<p>Az eszközök közti átmenet <strong>egyirányú, de nem lezáruló</strong>: a Történeti Adatbázis exportált CSV-je bármikor betölthető Pythonba (<code>pandas</code>) vagy R-be (<code>readr</code>) további elemzéshez, és áttölthető egy relációs DB-be is. Az átmenet másik irányában (nagy rendszerből kicsire) ritkán van szükség, de ha egy részkorpuszon szeretnénk gyorsan kísérletezni, egy SQL-lekérdezés eredménye pillanatok alatt CSV-ként exportálható, amit az eszköz közvetlenül betölt.</p>
 </div>
-<div id="week10-readings" class="section level2 hasAnchor" number="15.11">
-<h2><span class="header-section-number">15.11</span> További olvasnivaló<a href="week10.html#week10-readings" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="sajateszk-korlatok" class="section level2 hasAnchor" number="11.8">
+<h2><span class="header-section-number">11.8</span> Korlátok és kockázatok<a href="prozo-sajat-eszkoz.html#sajateszk-korlatok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Az EAV-modell rugalmassága kompromisszumokkal jár, amelyeket érdemes előre tudatosítani.</p>
+<p><strong>LocalStorage-kockázat.</strong> Minden adat a böngésző localStorage-ában van, amit a böngésző „előzmények/sütik törlése” művelet eltávolít. Rendszeres <strong>CSV-export</strong> ezért kötelező mentési stratégia; a kutatási anyagot sosem szabad csak a böngészőben tárolni. Ugyanígy a böngészőváltás (másik gépre áttelepülés) is manuális fájl-áthozatallal jár.</p>
+<p><strong>Kollaboráció hiánya.</strong> Egyszerre egyetlen kutató tud dolgozni egy példányon. Két kutató munkája csak exportált CSV-k összefésülésével egyesíthető, ami nem triviális. Többfelhasználós környezethez az ElitData-típusú rendszer (<a href="prozo-adatbazis.html#prozo-backend">9.7.1</a>) indokolt.</p>
+<p><strong>Lekérdezési erő.</strong> Az EAV-modell komplexebb analitikus kérdésekre (többszörös JOIN, időablak-szűrés, agregátumok) nem optimális. Ilyenkor érdemes az adatot exportálni és Pythonban / R-ben elemezni — vagy áttölteni egy relációs rendszerbe.</p>
+<p><strong>Adatmodell-stabilitás.</strong> A séma testreszabhatósága vonzó, de egy kutatócsoporton belül ugyanaz a vonás felel a szétcsúszásért: ha minden doktorandusz a saját módján nevezi el a mezőket, a korpusz egyesítése fájdalmas lesz. Már kisebb projekten is érdemes <strong>kódolási útmutatót</strong> vezetni (ld. <a href="prozo-adatbazis.html#prozo-adatbevitel">9.5</a> szakasz).</p>
+</div>
+<div id="sajateszk-feladatok" class="section level2 hasAnchor" number="11.9">
+<h2><span class="header-section-number">11.9</span> Kutatási reflexió és önálló feladatok<a href="prozo-sajat-eszkoz.html#sajateszk-feladatok" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A fejezet gyakorlati kipróbálásához három feladat ajánlott:</p>
+<p><strong>1. Saját mikro-prozopográfia.</strong> Válasszunk 20–30 fős csoportot a doktori vagy szakdolgozati témánkhoz (pl. egy település tanítói, egy tudós-levelezőkör, egy intézmény vezetői egy adott évtizedben). Építsük fel az eszközben, minimum 4 attribútum-típussal és 5 kapcsolattal. Reflektáljunk arra, <strong>milyen döntéseket kényszerített ki</strong> a séma választása.</p>
+<p><strong>2. Harmonizálási gyakorlat az MTA-adatsoron.</strong> A letöltött xlsx Foglalkozás attribútumában szereplő 26 nyers értéket redukáljuk 6–8 kanonikus kategóriára. Dokumentáljuk azokat a határeseteket, amelyeknél a döntés <strong>módszertani tét</strong>ű (pl. „drámaíró” és „regényíró” együtt kezelése, „jogász-politikus” besorolása, egyházi és tudósi pályák átfedése).</p>
+<p><strong>3. Forráskritika a kapcsolatokon.</strong> Vegyünk fel legalább tíz új kapcsolatot az MTA-adatsoron, mindegyikhez pontos forráshivatkozással. Írjunk egy egyoldalas reflexiót arról, mely kapcsolatoknál volt egyértelmű a forrás, és melyeknél kellett <strong>fokozati jelzéssel</strong> élni („valószínű”, „feltételezett”, „vitatott”).</p>
+<p>A feladatok nem arra szolgálnak, hogy az eszközt technikailag megtanuljuk — arra valók, hogy a <strong>módszertani döntések</strong> (mi legyen attribútum és mi mező, hogyan harmonizáljunk, mikor rögzítsünk egy kapcsolatot) explicitté váljanak a saját kutatási gyakorlatunkban.</p>
+</div>
+<div id="sajateszk-osszefoglalo" class="section level2 hasAnchor" number="11.10">
+<h2><span class="header-section-number">11.10</span> Összefoglaló<a href="prozo-sajat-eszkoz.html#sajateszk-osszefoglalo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A Történeti Adatbázis egy <strong>minimalista, saját kutatásra szabott</strong> prozopográfiai eszköz, amely az ElitData és az MDP-projektben bemutatott munkafolyamat egy kutatóra méretezett változatát nyújtja. Nem váltja ki a nagy léptékű relációs rendszereket, de a kutatás felderítő és előkészítő fázisában, doktoranduszi vagy szakdolgozói szinten, illetve egy nagyobb projekt pilotjaként hatékony eszköz. A módszertani elvek — forráskritika, eredeti érték megőrzése, harmonizálás külön oszlopban, kapcsolatok forrásmegjelöléssel — ugyanazok, amelyek a nagy rendszereknél: a különbség a léptékben és a kollaboráció nélküli, egyetlen kutatóra szabott munkamenetben van.</p>
+<div id="sajateszk-letoltes-osszefoglalo" class="section level3 hasAnchor" number="11.10.1">
+<h3><span class="header-section-number">11.10.1</span> Letölthető anyagok<a href="prozo-sajat-eszkoz.html#sajateszk-letoltes-osszefoglalo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
-<li><strong>FAIR Principles</strong>: Wilkinson et al. (2016). <em>The FAIR Guiding Principles for scientific data management and stewardship</em>. Scientific Data, 3:160018. <a href="https://doi.org/10.1038/sdata.2016.18">https://doi.org/10.1038/sdata.2016.18</a></li>
-<li><strong>Zenodo Help</strong>: <a href="https://help.zenodo.org/">https://help.zenodo.org/</a> — gyakorlati útmutató a feltöltéstől a DOI-kiadásig.</li>
-<li><strong>Data Management Plan (DMP) tool</strong>: <a href="https://dmptool.org/">https://dmptool.org/</a> — a Horizon Europe-kompatibilis DMP sablonjai.</li>
-<li><strong>GDPR és kutatás</strong>: EDPB (Európai Adatvédelmi Testület) <em>Guidelines 03/2020 on the processing of data concerning health for the purpose of scientific research in the context of the COVID-19 outbreak</em> — a tudományos kutatás jogalapjait általában is részletezi.</li>
-<li><strong>Creative Commons licencválasztó</strong>: <a href="https://chooser-beta.creativecommons.org/">https://chooser-beta.creativecommons.org/</a> — interaktív eszköz, amely a céljaink alapján ajánl licencet.</li>
-<li><strong>Tim Hitchcock &amp; William J. Turkel</strong>: <em>The Old Bailey Proceedings Online</em> — klasszikus tanulmány a történeti adatbázis-publikálás módszertanáról.</li>
-<li><strong>Open Science Framework</strong>: <a href="https://osf.io/">https://osf.io/</a> — preregisztráció és projekt-menedzsment.</li>
+<li><a href="torteneti_adatbazis.html">torteneti_adatbazis.html</a> — a böngészőeszköz</li>
+<li><a href="MTA_alapitok_es_elso_nemzedek_1825-1850.xlsx">MTA_alapitok_es_elso_nemzedek_1825-1850.xlsx</a> — 50 rekordos demonstrációs adatsor</li>
 </ul>
 
 </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="week9.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="prozo-mdp.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="week7.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
