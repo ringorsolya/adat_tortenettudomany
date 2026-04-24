@@ -873,6 +873,13 @@ let DB = (()=>{
         delete d.persons;
       }
       if (!d.config.entitySchema) d.config.entitySchema = JSON.parse(JSON.stringify(DEF_CFG.entitySchema));
+      // Migráció: régi mintaadat-projektnév visszaírása a default névre
+      if (d.config.projectName === 'Reformkori értelmiség') {
+        d.config.projectName = 'Történeti adatbázis';
+      }
+      if (d.config.projectDesc === '1825–1848 mintaadatbázis') {
+        d.config.projectDesc = '';
+      }
       return d;
     }
   } catch(e){}
@@ -931,7 +938,7 @@ function extractYear(str){
 // ══════════════════════════════════════════════════════════════
 // NAVIGÁCIÓ
 // ══════════════════════════════════════════════════════════════
-const VIEWS = ['entities','entry','harmonize','relations','viz'];
+const VIEWS = ['entities','entry','harmonize','relations','viz','help'];
 
 function showView(name){
   VIEWS.forEach((v,i)=>{
@@ -2099,7 +2106,8 @@ function exportJSON(){
 
 function toggleExportMenu(){
   const m=document.getElementById('exportMenu');
-  m.style.display=m.style.display==='none'||!m.style.display?'':'none';
+  const isHidden=window.getComputedStyle(m).display==='none';
+  m.style.display=isHidden?'block':'none';
 }
 function closeExportMenu(){ const m=document.getElementById('exportMenu'); if(m) m.style.display='none'; }
 document.addEventListener('click',e=>{
@@ -2283,8 +2291,6 @@ function clearAllData(){
 function loadSample(){
   if(DB.entities.length&&!confirm('A jelenlegi adatokat felülírod. Folytatod?')) return;
   DB=emptyDB();
-  DB.config.projectName='Reformkori értelmiség';
-  DB.config.projectDesc='1825–1848 mintaadatbázis';
   DB.config._schemaChosen=true;
   const ids=['s1','s2','s3','s4','s5'];
   DB.entities=[
