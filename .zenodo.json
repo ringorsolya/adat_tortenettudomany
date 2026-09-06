@@ -1,0 +1,27 @@
+{
+    "title": "Adat a történettudományban – online tananyag",
+    "description": "<p>Online tananyag arról, hogyan lesz a történeti forrásból adat, és mit kezd vele a történész. A kötet végigviszi a digitális kutatási munkafolyamatot: forrás és adat megkülönböztetése, bibliográfiai adat és hivatkozáskezelés, történeti források digitális kiadása (TEI-szabvány, OCR/HTR, TEI–RiC annotáló eszköz), történeti statisztikák, adattisztítás, prozopográfiai adatbázisok építése és elemzése, szövegbányászat és diskurzuselemzés levéltári korpuszon, adatvizualizáció, végül az adatok publikálása: FAIR-elvek, repozitóriumok, metaadatok, licencek, GDPR és kutatói etika.</p><p>Az anyag esettanulmányokra épül (ElitData, MDP hatásköri lista, egyházmegyei ösztöndíjasok), és saját fejlesztésű, böngészőben futtatható eszközöket is bemutat.</p><p><strong>Figyelem:</strong> a CC BY-NC-SA 4.0 licenc a kötet szövegére és a hozzá készült ábrákra vonatkozik. A mások felületeiről készült képernyőképek a saját jogosultjaikat illetik, és oktatási célú idézésként szerepelnek – rájuk a licenc nem terjed ki.</p>",
+    "upload_type": "publication",
+    "publication_type": "book",
+    "language": "hun",
+    "license": "cc-by-nc-sa-4.0",
+    "access_right": "open",
+    "creators": [
+          { "name": "Ring, Orsolya", "orcid": "0000-0002-3710-1118", "affiliation": "Eötvös Loránd Tudományegyetem, Bölcsészettudományi Kar, Történelem Segédtudományai Tanszék" }
+    ],
+    "keywords": [
+          "digitális bölcsészet",
+          "digitális történettudomány",
+          "prozopográfia",
+          "TEI",
+          "digitális forráskiadás",
+          "adatvizualizáció",
+          "FAIR",
+          "tananyag",
+          "digital humanities",
+          "prosopography",
+          "scholarly editing",
+          "open data"
+    ],
+    "notes": "ELTE BTK Történelem Segédtudományai Tanszék. A tananyag online változata: https://eltebtktortsegedtud.github.io/adat_tortenettudomany/"
+}
